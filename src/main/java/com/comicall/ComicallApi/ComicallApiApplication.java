@@ -1,10 +1,6 @@
 package com.comicall.ComicallApi;
 
-import com.comicall.ComicallApi.dtos.comics.ComicsCreateRequest;
 import com.comicall.ComicallApi.entities.Genre;
-import com.comicall.ComicallApi.entities.Role;
-import com.comicall.ComicallApi.entities.User;
-import com.comicall.ComicallApi.entities.enums.EGenre;
 import com.comicall.ComicallApi.services.User.IAuthorService;
 import com.comicall.ComicallApi.services.User.IUserService;
 import org.springframework.boot.CommandLineRunner;
@@ -12,11 +8,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-
-import java.util.HashSet;
-import java.util.Set;
 
 @SpringBootApplication
 public class ComicallApiApplication {

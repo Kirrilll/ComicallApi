@@ -1,10 +1,10 @@
 package com.comicall.ComicallApi.services.User;
 
-import com.comicall.ComicallApi.dtos.comics.ComicsCreateRequest;
+import com.comicall.ComicallApi.dtos.comics.ComicsRequest;
 import com.comicall.ComicallApi.entities.Comics;
 import com.comicall.ComicallApi.entities.Genre;
 import com.comicall.ComicallApi.entities.User;
-import com.comicall.ComicallApi.entities.enums.EGenre;
+import com.comicall.ComicallApi.helpers.mappers.GenreMapper;
 import com.comicall.ComicallApi.repositories.ComicsRepository;
 import com.comicall.ComicallApi.repositories.GenreRepository;
 import com.comicall.ComicallApi.repositories.UserRepository;
@@ -27,12 +27,14 @@ public class AuthorService implements IAuthorService{
     private UserRepository _userRepository;
     @Autowired
     private GenreRepository _genreRepository;
+    @Autowired
+    private GenreMapper _genreMapper;
 
     @Override
-    public Comics createComics(ComicsCreateRequest comics) throws ChangeSetPersister.NotFoundException {
+    public Optional<Comics> createComics(ComicsRequest comics) {
 
         Optional<User> author = Optional.ofNullable(_userRepository.findByUsername(comics.getAuthorName()));
-        if(author.isEmpty()) throw new ChangeSetPersister.NotFoundException();
+        if(author.isEmpty()) return Optional.empty();
 
         Comics createdComics = Comics.builder()
                 .setName(comics.getName())
@@ -40,30 +42,41 @@ public class AuthorService implements IAuthorService{
                 .setDescription(comics.getDescription())
                 .setPosterPath(comics.getPosterPath())
                 .setPublishYear(comics.getPublishYear())
+                .setGenres(_genreMapper.toEntities(comics.getGenres()))
                 .build();
 
-        return _comicsRepository.save(createdComics);
+        return Optional.of(_comicsRepository.save(createdComics));
     }
 
-    //Поиск по имени и по String genres
     @Override
-    public Comics addGenresToComics(String comicsName, Set<EGenre> genres) throws ChangeSetPersister.NotFoundException {
+    public Optional<Comics> addGenresToComics(String comicsName, Set<String> genres)  {
         Optional<Comics> comicsOptional = _comicsRepository.findByName(comicsName);
-        if(comicsOptional.isEmpty()) throw new ChangeSetPersister.NotFoundException();
-        Set<Genre> existsGenres = genres.stream().map(genre -> {
-            Optional<Genre> foundedGenre = _genreRepository.findByGenre(genre);
-            return foundedGenre.get();
-        }).collect(Collectors.toSet());
+        if(comicsOptional.isEmpty()) return Optional.empty();
         Comics comics = comicsOptional.get();
         Set<Genre> comicsGenres = comics.getGenres();
-        comicsGenres.addAll(existsGenres);
+        comicsGenres.addAll(_genreMapper.toEntities(genres));
         comics.setGenres(comicsGenres);
-        return _comicsRepository.save(comics);
+        return Optional.of(_comicsRepository.save(comics));
     }
 
-    //Сделать GenreRequest
+
+
     @Override
-    public Comics createComicsWithGenres(Comics comics, Set<Genre> genres) {
-        return null;
+    public void removeComics(String comicsName) {
+        //также здесь очистка пространства от картинок
+        Optional<Comics> comics = _comicsRepository.findByName(comicsName);
+        comics.ifPresent(value -> _comicsRepository.delete(value));
+    }
+
+    @Override
+    public Optional<Comics> changeComics(ComicsRequest comicsRequest) {
+        Optional<Comics> comicsOptional = _comicsRepository.findByName(comicsRequest.getName());
+        if(comicsOptional.isEmpty()) return Optional.empty();
+        Comics comics = comicsOptional.get();
+        comics.setDescription(comicsRequest.getDescription());
+        comics.setName(comicsRequest.getDescription());
+        comics.setPublishYear(comicsRequest.getPublishYear());
+        comics.setGenres(_genreMapper.toEntities(comicsRequest.getGenres()));
+        return Optional.of(_comicsRepository.save(comics));
     }
 }

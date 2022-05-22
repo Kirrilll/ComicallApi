@@ -1,20 +1,24 @@
 package com.comicall.ComicallApi.dtos.comics;
 
-public class ComicsCreateRequest {
+import java.util.Set;
+
+public class ComicsRequest {
     private String name;
     private String description;
     private int publishYear;
     private String posterPath;
     private String authorName;
+    private Set<String> genres;
 
-    public  ComicsCreateRequest(){}
+    public ComicsRequest(){}
 
-    public ComicsCreateRequest(String name, String description, int publishYear, String posterPath, String authorName) {
+    public ComicsRequest(String name, String description, int publishYear, String posterPath, String authorName, Set<String> genres) {
         this.name = name;
         this.description = description;
         this.publishYear = publishYear;
         this.posterPath = posterPath;
         this.authorName = authorName;
+        this.genres = genres;
     }
 
     public String getDescription() {
@@ -55,5 +59,13 @@ public class ComicsCreateRequest {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Set<String> getGenres() {
+        return genres;
+    }
+
+    public void setGenres(Set<String> genres) {
+        this.genres = genres;
     }
 }

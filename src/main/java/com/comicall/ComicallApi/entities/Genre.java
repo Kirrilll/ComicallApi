@@ -1,9 +1,4 @@
 package com.comicall.ComicallApi.entities;
-
-import com.comicall.ComicallApi.entities.enums.EGenre;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import net.minidev.json.annotate.JsonIgnore;
 
 import javax.persistence.*;
@@ -17,10 +12,7 @@ public class Genre {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", nullable = false)
     private Long id;
-
-    @Enumerated(EnumType.STRING)
-    @Column(length = 20)
-    private EGenre genre;
+    private String genre;
 
     @ManyToMany(mappedBy = "genres")
     @JsonIgnore
@@ -30,7 +22,7 @@ public class Genre {
         this.comics = new HashSet<>();
     }
 
-    public Genre(Long id, EGenre genre, Set<Comics> comics) {
+    public Genre(Long id, String genre, Set<Comics> comics) {
         this.id = id;
         this.genre = genre;
         this.comics = comics;
@@ -44,11 +36,11 @@ public class Genre {
         this.id = id;
     }
 
-    public EGenre getGenre() {
+    public String getGenre() {
         return genre;
     }
 
-    public void setGenre(EGenre genre) {
+    public void setGenre(String genre) {
         this.genre = genre;
     }
 

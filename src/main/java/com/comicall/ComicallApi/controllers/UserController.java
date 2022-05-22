@@ -22,30 +22,17 @@ public class UserController {
     @Autowired
     private IUserService _userService;
 
-    @GetMapping("/users")
-    public ResponseEntity<List<User>> getUsers(){
-        return ResponseEntity.ok().body(_userService.getUsers());
-    }
-
     @PostMapping("/user/save")
     public ResponseEntity<User> createUser(@RequestBody User user){
         URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/user/save").toUriString());
         return ResponseEntity.created(uri).body(_userService.saveUser(user));
     }
 
-    //Это в RoleController
-    @PostMapping("/role/save")
-    @PreAuthorize("hasRole('ADMIN')")
-    public  ResponseEntity<Role> createRole(@RequestBody Role role){
-        URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/role/save").toUriString());
-        return ResponseEntity.created(uri).body(_userService.saveRole(role));
-    }
+    //Добавить в свою библиотеку
+    //удалить из библиотеки
+    //добавить заметку
+    //удалить заметку
+    //посмотреть личную библиотеку?
 
-    //Переделать это
-    @PreAuthorize("hasRole('ADMIN')")
-    @PutMapping("/role/update")
-    public  ResponseEntity<?> updateUser(@RequestBody UserToRoleRequest userToRoleRequest){
-        _userService.addRoleToUser(userToRoleRequest.getUsername(), userToRoleRequest.getRoleName());
-        return ResponseEntity.ok().build();
-    }
+
 }
