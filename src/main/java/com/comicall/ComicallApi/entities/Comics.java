@@ -1,7 +1,7 @@
 package com.comicall.ComicallApi.entities;
 
 import com.comicall.ComicallApi.helpers.ComicsBuilder;
-import net.minidev.json.annotate.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;

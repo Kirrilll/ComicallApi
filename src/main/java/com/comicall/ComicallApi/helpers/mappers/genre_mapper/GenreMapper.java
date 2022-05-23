@@ -1,4 +1,4 @@
-package com.comicall.ComicallApi.helpers.mappers;
+package com.comicall.ComicallApi.helpers.mappers.genre_mapper;
 
 import com.comicall.ComicallApi.dtos.genres.GenreDTO;
 import com.comicall.ComicallApi.entities.Genre;
@@ -12,7 +12,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component
-public class GenreMapper implements IMapper<GenreDTO, Genre>{
+public class GenreMapper implements IGenreMapper{
 
     @Autowired
     private GenreRepository _genreRepository;

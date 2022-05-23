@@ -38,8 +38,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests().antMatchers("/login").permitAll().and()
-                .authorizeRequests().antMatchers().authenticated()
-                .anyRequest().authenticated().and()
+                .authorizeRequests().antMatchers().permitAll()
+                .anyRequest().permitAll().and()
+//                .authorizeRequests().antMatchers().authenticated()
+//                .anyRequest().authenticated().and()
                 .addFilter(new AuthenticationFilter(authenticationManagerBean()))
                 .addFilterBefore(new AuthTokenFilter(), UsernamePasswordAuthenticationFilter.class);
     }

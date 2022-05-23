@@ -4,11 +4,8 @@ import com.comicall.ComicallApi.dtos.MessageDTO;
 import com.comicall.ComicallApi.dtos.comics.ComicsNameGenresRequest;
 import com.comicall.ComicallApi.dtos.comics.ComicsRequest;
 import com.comicall.ComicallApi.entities.Comics;
-import com.comicall.ComicallApi.services.User.IAuthorService;
-import org.aspectj.bridge.Message;
-import org.ietf.jgss.MessageProp;
+import com.comicall.ComicallApi.services.user.IAuthorService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,13 +27,13 @@ public class AuthorController {
     }
 
     @DeleteMapping("/author/delete")
-    ResponseEntity<?> deleteComics(String comicsTitle){
+    ResponseEntity<MessageDTO> deleteComics(@RequestParam String comicsTitle){
         _authorService.removeComics(comicsTitle);
         return ResponseEntity.ok().body(new MessageDTO("successfully deleted"));
     }
 
     @PatchMapping("author/addGenres")
-    ResponseEntity<?> addGenresToComics(ComicsNameGenresRequest comicsNameGenresRequest){
+    ResponseEntity<?> addGenresToComics(@RequestBody ComicsNameGenresRequest comicsNameGenresRequest){
         Optional<Comics> comics = _authorService.addGenresToComics(comicsNameGenresRequest.getComicsName(), comicsNameGenresRequest.getGenres());
         if(comics.isEmpty()) return ResponseEntity.status(404).body(new MessageDTO("comics not found"));
         return ResponseEntity.ok(comics.get());

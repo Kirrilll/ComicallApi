@@ -1,8 +1,7 @@
-package com.comicall.ComicallApi.services.User;
+package com.comicall.ComicallApi.services.user;
 
 import com.comicall.ComicallApi.dtos.comics.ComicsRequest;
 import com.comicall.ComicallApi.entities.Comics;
-import org.springframework.data.crossstore.ChangeSetPersister;
 
 import java.util.Optional;
 import java.util.Set;

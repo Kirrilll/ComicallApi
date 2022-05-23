@@ -4,12 +4,11 @@ import com.comicall.ComicallApi.dtos.genres.GenreDTO;
 import com.comicall.ComicallApi.dtos.user.UserToRoleRequest;
 import com.comicall.ComicallApi.entities.Role;
 import com.comicall.ComicallApi.entities.User;
-import com.comicall.ComicallApi.helpers.mappers.GenreMapper;
-import com.comicall.ComicallApi.services.User.IAdminService;
-import com.comicall.ComicallApi.services.User.IUserService;
+import com.comicall.ComicallApi.helpers.mappers.genre_mapper.GenreMapper;
+import com.comicall.ComicallApi.services.user.IAdminService;
+import com.comicall.ComicallApi.services.user.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -35,11 +34,14 @@ public class AdminController {
         return ResponseEntity.created(uri).body(_adminService.saveRole(role));
     }
 
+    //не работает
     @PostMapping("admin/genre/create")
-    public ResponseEntity<?> createGenre(GenreDTO genreDTO){
+    public ResponseEntity<?> createGenre(@RequestBody GenreDTO genreDTO){
         return ResponseEntity.ok().body(_adminService.saveGenre(genreDTO));
     }
 
+
+    //Не работает
     //@PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/admin/user/update")
     public  ResponseEntity<?> updateUser(@RequestBody UserToRoleRequest userToRoleRequest){

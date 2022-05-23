@@ -1,21 +1,19 @@
-package com.comicall.ComicallApi.services.User;
+package com.comicall.ComicallApi.services.user;
 
 import com.comicall.ComicallApi.dtos.comics.ComicsRequest;
 import com.comicall.ComicallApi.entities.Comics;
 import com.comicall.ComicallApi.entities.Genre;
 import com.comicall.ComicallApi.entities.User;
-import com.comicall.ComicallApi.helpers.mappers.GenreMapper;
+import com.comicall.ComicallApi.helpers.mappers.genre_mapper.IGenreMapper;
 import com.comicall.ComicallApi.repositories.ComicsRepository;
 import com.comicall.ComicallApi.repositories.GenreRepository;
 import com.comicall.ComicallApi.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -28,11 +26,12 @@ public class AuthorService implements IAuthorService{
     @Autowired
     private GenreRepository _genreRepository;
     @Autowired
-    private GenreMapper _genreMapper;
+    private IGenreMapper _genreMapper;
 
     @Override
     public Optional<Comics> createComics(ComicsRequest comics) {
 
+        //Заменить это на доставание из контекста
         Optional<User> author = Optional.ofNullable(_userRepository.findByUsername(comics.getAuthorName()));
         if(author.isEmpty()) return Optional.empty();
 
@@ -45,7 +44,8 @@ public class AuthorService implements IAuthorService{
                 .setGenres(_genreMapper.toEntities(comics.getGenres()))
                 .build();
 
-        return Optional.of(_comicsRepository.save(createdComics));
+
+        return Optional.of( _comicsRepository.save(createdComics));
     }
 
     @Override

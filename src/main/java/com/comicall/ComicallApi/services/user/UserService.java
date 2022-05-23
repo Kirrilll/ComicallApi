@@ -1,9 +1,8 @@
-package com.comicall.ComicallApi.services.User;
+package com.comicall.ComicallApi.services.user;
 
 import com.comicall.ComicallApi.dtos.comics.ComicsResponse;
 import com.comicall.ComicallApi.dtos.genres.GenreDTO;
 import com.comicall.ComicallApi.entities.Comics;
-import com.comicall.ComicallApi.entities.Role;
 import com.comicall.ComicallApi.entities.User;
 import com.comicall.ComicallApi.repositories.ComicsRepository;
 import com.comicall.ComicallApi.repositories.RoleRepository;
@@ -54,7 +53,11 @@ public class UserService implements  IUserService, UserDetailsService {
 
     @Override
     public List<ComicsResponse> getComics() {
-        return _comicsRepo.findAll().stream().map(comics -> new ComicsResponse(
+        String name = "test"; //Будет получаться из контекста
+        User user = _userRepo.findByUsername(name);
+        return user.getUserLibrary().stream().map(
+                comics -> new ComicsResponse(
+                comics.getId(),
                 comics.getName(),
                 comics.getAuthor().getUsername(),
                 comics.getPosterPath(),
@@ -65,14 +68,25 @@ public class UserService implements  IUserService, UserDetailsService {
     }
 
     @Override
-    public void addComicsToUserLibrary(String username, String comicsTitle) throws ChangeSetPersister.NotFoundException {
-        User user = _userRepo.findByUsername(username);
-        Optional<Comics> comics = _comicsRepo.findByName(comicsTitle);
+    public void removeComics(Long id) {
+        User user = _userRepo.findByUsername("test"); //Получу из контекста
+        Optional<Comics> comics = _comicsRepo.findById(id);
+        if(comics.isPresent()){
+            Set<User> readers = comics.get().getReaders();
+            readers.remove(user);
+            _comicsRepo.save(comics.get());
+        }
+    }
+
+    @Override
+    public void addComicsToUserLibrary(String username, Long comicsId) throws ChangeSetPersister.NotFoundException {
+        User user = _userRepo.findByUsername(username); //Получу из контекста
+        Optional<Comics> comics = _comicsRepo.findById(comicsId);
         if(comics.isEmpty()) throw new ChangeSetPersister.NotFoundException();
-        Set<Comics> userLibrary = user.getUserLibrary();
-        userLibrary.add(comics.get());
-        user.setUserLibrary(userLibrary);
-        _userRepo.save(user);
+        Comics addedComics = comics.get();
+        Set<User> readers = addedComics.getReaders();
+        readers.add(user);
+        _comicsRepo.save(addedComics);
     }
 
     @Override

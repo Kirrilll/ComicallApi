@@ -1,10 +1,10 @@
-package com.comicall.ComicallApi.services.User;
+package com.comicall.ComicallApi.services.user;
 
 import com.comicall.ComicallApi.dtos.genres.GenreDTO;
 import com.comicall.ComicallApi.entities.Genre;
 import com.comicall.ComicallApi.entities.Role;
 import com.comicall.ComicallApi.entities.User;
-import com.comicall.ComicallApi.helpers.mappers.GenreMapper;
+import com.comicall.ComicallApi.helpers.mappers.genre_mapper.GenreMapper;
 import com.comicall.ComicallApi.repositories.GenreRepository;
 import com.comicall.ComicallApi.repositories.RoleRepository;
 import com.comicall.ComicallApi.repositories.UserRepository;
@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 
 @Service
 public class AdminService implements IAdminService{
@@ -44,6 +45,6 @@ public class AdminService implements IAdminService{
 
     @Override
     public Genre saveGenre(GenreDTO genreDTO) {
-        return _genreRepository.save(new Genre(null, genreDTO.getName(), new HashSet<>()));
+        return _genreRepository.save(new Genre(null, genreDTO.getName().toUpperCase(Locale.ROOT), new HashSet<>()));
     }
 }
