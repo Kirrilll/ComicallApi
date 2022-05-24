@@ -1,4 +1,4 @@
-package com.comicall.ComicallApi.configs.jwt;
+package com.comicall.ComicallApi.configs;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

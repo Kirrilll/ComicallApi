@@ -1,8 +1,10 @@
 package com.comicall.ComicallApi.configs;
 
+import com.comicall.ComicallApi.configs.jwt.AuthEntryPointJwt;
 import com.comicall.ComicallApi.configs.jwt.AuthTokenFilter;
-import com.comicall.ComicallApi.configs.jwt.AuthenticationFilter;
+import com.comicall.ComicallApi.services.user.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -26,26 +28,37 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private PasswordEncoder _passwordEncoder;
 
+    @Autowired
+    UserDetailsServiceImpl userDetailsService;
+
+    @Autowired
+    private AuthEntryPointJwt unauthorizedHandler;
+
+    @Bean
+    public AuthTokenFilter authenticationJwtTokenFilter() {
+        return new AuthTokenFilter();
+    }
 
     @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(_userDetailsService).passwordEncoder(_passwordEncoder);
+    public void configure(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
+        authenticationManagerBuilder.userDetailsService(userDetailsService).passwordEncoder(_passwordEncoder);
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.cors().and()
-                .csrf().disable()
+        http.cors().and().csrf().disable()
+                .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-                .authorizeRequests().antMatchers("/login").permitAll().and()
-                .authorizeRequests().antMatchers().permitAll()
-                .anyRequest().permitAll().and()
-//                .authorizeRequests().antMatchers().authenticated()
-//                .anyRequest().authenticated().and()
-                .addFilter(new AuthenticationFilter(authenticationManagerBean()))
-                .addFilterBefore(new AuthTokenFilter(), UsernamePasswordAuthenticationFilter.class);
+                .authorizeRequests()
+                    .antMatchers("/api/admin/**").hasAnyAuthority("ADMIN")
+                    .antMatchers("/api/author/**").hasAnyAuthority("AUTHOR", "ADMIN")
+                    .antMatchers("/api/auth/**").permitAll()
+                    .anyRequest().authenticated();
+
+        http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
     }
 
+    @Bean
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }

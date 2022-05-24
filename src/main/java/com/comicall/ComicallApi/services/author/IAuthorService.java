@@ -1,4 +1,4 @@
-package com.comicall.ComicallApi.services.user;
+package com.comicall.ComicallApi.services.author;
 
 import com.comicall.ComicallApi.dtos.comics.ComicsRequest;
 import com.comicall.ComicallApi.entities.Comics;

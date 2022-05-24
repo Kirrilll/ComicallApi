@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/library")
 @CrossOrigin(origins = "*")
 public class LibraryController {
     @Autowired
@@ -25,7 +25,7 @@ public class LibraryController {
     @Autowired
     private IGenreMapper _genreMapper;
 
-    @GetMapping("/library/comics")
+    @GetMapping("/comics")
     ResponseEntity<List<ComicsResponse>> getAll(){
         List<Comics> allComics = _libraryService.getAll();
         return ResponseEntity.ok().body(allComics.stream().map(

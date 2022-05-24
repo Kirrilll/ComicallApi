@@ -16,19 +16,19 @@ import java.util.List;
 //Создать DTO userRequest, userResponse
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/user")
 @CrossOrigin(origins = "*")
 public class UserController {
     @Autowired
     private IUserService _userService;
 
-    @PostMapping("/user/save")
-    public ResponseEntity<User> createUser(@RequestBody User user){
-        URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/user/save").toUriString());
-        return ResponseEntity.created(uri).body(_userService.saveUser(user));
-    }
+//    @PostMapping("/user/save")
+//    public ResponseEntity<User> createUser(@RequestBody User user){
+//        URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/user/save").toUriString());
+//        return ResponseEntity.created(uri).body(_userService.saveUser(user));
+//    }
 
-    @PostMapping("/user/addToLibrary")
+    @PostMapping("/addToLibrary")
     public ResponseEntity<MessageDTO> addComics(@RequestParam Long comicsId){
         String username = "test";
         try {
@@ -39,12 +39,12 @@ public class UserController {
         }
     }
 
-    @GetMapping("/user/comics")
+    @GetMapping("/comics")
     public ResponseEntity<List<ComicsResponse>> getUserLibrary(){
         return ResponseEntity.ok(_userService.getComics());
     }
 
-    @PatchMapping("users/removeComics")
+    @PatchMapping("/removeComics")
     public ResponseEntity<MessageDTO> removeComicsFromLibrary(@RequestParam Long id){
         _userService.removeComics(id);
         return ResponseEntity.ok().body(new MessageDTO("Successfully deleted"));

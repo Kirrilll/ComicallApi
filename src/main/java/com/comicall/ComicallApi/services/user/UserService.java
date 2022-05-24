@@ -27,7 +27,7 @@ import java.util.Set;
 @RequiredArgsConstructor
 @Transactional
 @Slf4j
-public class UserService implements  IUserService, UserDetailsService {
+public class UserService implements  IUserService{
 
     @Autowired
     private UserRepository _userRepo;
@@ -89,20 +89,4 @@ public class UserService implements  IUserService, UserDetailsService {
         _comicsRepo.save(addedComics);
     }
 
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = _userRepo.findByUsername(username);
-        if(user == null) throw new UsernameNotFoundException("user doesn't exist");
-        else {
-            return org.springframework.security.core.userdetails.User.builder()
-                    .username(user.getUsername())
-                    .password(user.getPassword())
-                    .authorities(user
-                            .getRoles()
-                            .stream()
-                            .map(role -> new SimpleGrantedAuthority(role.getName()))
-                            .toList())
-                    .build();
-        }
-    }
 }

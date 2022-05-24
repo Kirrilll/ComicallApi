@@ -1,4 +1,4 @@
-package com.comicall.ComicallApi.services.user;
+package com.comicall.ComicallApi.services.admin;
 
 import com.comicall.ComicallApi.dtos.genres.GenreDTO;
 import com.comicall.ComicallApi.entities.Genre;
@@ -36,6 +36,7 @@ public class AdminService implements IAdminService{
         User user = _userRepository.findByUsername(username);
         Role role = _roleRepository.findByName(roleName);
         user.getRoles().add(role);
+        _userRepository.save(user);
     }
 
     @Override

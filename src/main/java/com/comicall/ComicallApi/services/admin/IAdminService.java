@@ -1,4 +1,4 @@
-package com.comicall.ComicallApi.services.user;
+package com.comicall.ComicallApi.services.admin;
 
 import com.comicall.ComicallApi.dtos.genres.GenreDTO;
 import com.comicall.ComicallApi.entities.Genre;
