@@ -2,6 +2,7 @@ package com.comicall.ComicallApi.entities;
 
 import lombok.*;
 import net.minidev.json.annotate.JsonIgnore;
+import org.aspectj.weaver.ast.Not;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -31,6 +32,9 @@ public class User {
 
     @ManyToMany(mappedBy = "readers")
     private Set<Comics> userLibrary;
+
+    @OneToMany(mappedBy = "noteAuthor")
+    private Set<Note> notes;
 
     public User(){
         roles = new HashSet<>();

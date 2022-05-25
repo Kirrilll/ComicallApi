@@ -1,19 +1,26 @@
 package com.comicall.ComicallApi.services.author;
 
 import com.comicall.ComicallApi.dtos.comics.ComicsRequest;
+import com.comicall.ComicallApi.dtos.page.PageRequest;
 import com.comicall.ComicallApi.entities.Comics;
 import com.comicall.ComicallApi.entities.Genre;
+import com.comicall.ComicallApi.entities.Page;
 import com.comicall.ComicallApi.entities.User;
 import com.comicall.ComicallApi.helpers.mappers.genre_mapper.IGenreMapper;
+import com.comicall.ComicallApi.models.UserDetailsImpl;
 import com.comicall.ComicallApi.repositories.ComicsRepository;
 import com.comicall.ComicallApi.repositories.GenreRepository;
+import com.comicall.ComicallApi.repositories.PageRepository;
 import com.comicall.ComicallApi.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -27,17 +34,18 @@ public class AuthorService implements IAuthorService{
     private GenreRepository _genreRepository;
     @Autowired
     private IGenreMapper _genreMapper;
+    @Autowired
+    private PageRepository _pageRepository;
 
     @Override
     public Optional<Comics> createComics(ComicsRequest comics) {
 
         //Заменить это на доставание из контекста
-        Optional<User> author = Optional.ofNullable(_userRepository.findByUsername(comics.getAuthorName()));
-        if(author.isEmpty()) return Optional.empty();
+        User author = getUserFromAuthentication();
 
         Comics createdComics = Comics.builder()
                 .setName(comics.getName())
-                .setAuthor(author.get())
+                .setAuthor(author)
                 .setDescription(comics.getDescription())
                 .setPosterPath(comics.getPosterPath())
                 .setPublishYear(comics.getPublishYear())
@@ -45,6 +53,19 @@ public class AuthorService implements IAuthorService{
                 .build();
 
 
+        Comics savedComics = _comicsRepository.save(createdComics);
+
+        Set<Page> pages = new HashSet<>();
+        for(PageRequest pageRequest: comics.getPages()){
+            pages.add(_pageRepository.save(new Page(
+                    null,
+                    pageRequest.getPageNumber(),
+                    pageRequest.getFilePath(),
+                    savedComics,
+                    new HashSet<>()
+            )));
+        }
+        savedComics.setPages(pages);
         return Optional.of( _comicsRepository.save(createdComics));
     }
 
@@ -78,5 +99,10 @@ public class AuthorService implements IAuthorService{
         comics.setPublishYear(comicsRequest.getPublishYear());
         comics.setGenres(_genreMapper.toEntities(comicsRequest.getGenres()));
         return Optional.of(_comicsRepository.save(comics));
+    }
+
+    private User getUserFromAuthentication(){
+        UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return _userRepository.getById(userDetails.getId());
     }
 }

@@ -11,6 +11,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -39,6 +40,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new AuthTokenFilter();
     }
 
+
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring().antMatchers("/swagger-ui/**", "/v3/api-docs/**");
+    }
+
     @Override
     public void configure(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
         authenticationManagerBuilder.userDetailsService(userDetailsService).passwordEncoder(_passwordEncoder);
@@ -50,11 +57,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
+                    .antMatchers("/swagger-ui/**", "/bus/v3/api-docs/**").permitAll()
                     .antMatchers("/api/admin/**").hasAnyAuthority("ADMIN")
                     .antMatchers("/api/author/**").hasAnyAuthority("AUTHOR", "ADMIN")
                     .antMatchers("/api/auth/**").permitAll()
                     .anyRequest().authenticated();
-
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
     }
 

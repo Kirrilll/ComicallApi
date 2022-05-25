@@ -2,6 +2,7 @@ package com.comicall.ComicallApi.helpers;
 
 import com.comicall.ComicallApi.entities.Comics;
 import com.comicall.ComicallApi.entities.Genre;
+import com.comicall.ComicallApi.entities.Page;
 import com.comicall.ComicallApi.entities.User;
 
 import java.util.HashSet;
@@ -17,6 +18,7 @@ public class ComicsBuilder implements IBuilder<Comics>{
     User author;
     Set<Genre> genres = new HashSet<>();
     Set<User> readers = new HashSet<>();
+    Set<Page> pages = new HashSet<>();
 
     public ComicsBuilder setDescription(String description){
         this.description = description;
@@ -53,8 +55,13 @@ public class ComicsBuilder implements IBuilder<Comics>{
         return this;
     }
 
+    public ComicsBuilder setPages(Set<Page> pages){
+        this.pages.addAll(pages);
+        return this;
+    }
+
     @Override
     public Comics build() {
-        return new Comics(id, name, description, publishYear, posterPath, author, genres, readers);
+        return new Comics(id, name, description, publishYear, posterPath, author, genres, readers, pages);
     }
 }

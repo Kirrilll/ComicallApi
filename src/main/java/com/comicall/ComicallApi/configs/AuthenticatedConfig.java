@@ -8,13 +8,17 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
-public class EncryptionConfig {
-    @Bean
-    PasswordEncoder passwordEncoder(){
-        return new BCryptPasswordEncoder();
-    }
+public class AuthenticatedConfig {
+
+    @Autowired
+    private UserRepository _userRepository;
+
+//    @Bean
+//    @Scope("prototype")
+//    private User authenticatedUserBean(){
+//        UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//        return _userRepository.getById(userDetails.getId());
+//    }
 }

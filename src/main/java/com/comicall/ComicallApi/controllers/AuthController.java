@@ -39,7 +39,7 @@ public class AuthController {
     private IAuthService _authService;
 
 
-    @PostMapping("/signin")
+    @PostMapping("/signing")
     public ResponseEntity<?> authUser(@RequestBody RegisterRequest loginRequest) {
         return ResponseEntity.ok(_authService.signIn(loginRequest));
     }

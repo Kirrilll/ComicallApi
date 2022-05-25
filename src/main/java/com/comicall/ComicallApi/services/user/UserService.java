@@ -2,16 +2,21 @@ package com.comicall.ComicallApi.services.user;
 
 import com.comicall.ComicallApi.dtos.comics.ComicsResponse;
 import com.comicall.ComicallApi.dtos.genres.GenreDTO;
+import com.comicall.ComicallApi.dtos.page.PageResponse;
 import com.comicall.ComicallApi.entities.Comics;
+import com.comicall.ComicallApi.entities.Note;
+import com.comicall.ComicallApi.entities.Page;
 import com.comicall.ComicallApi.entities.User;
-import com.comicall.ComicallApi.repositories.ComicsRepository;
-import com.comicall.ComicallApi.repositories.RoleRepository;
-import com.comicall.ComicallApi.repositories.UserRepository;
+import com.comicall.ComicallApi.helpers.mappers.page_mapper.IPageMapper;
+import com.comicall.ComicallApi.models.UserDetailsImpl;
+import com.comicall.ComicallApi.repositories.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -32,18 +37,13 @@ public class UserService implements  IUserService{
     @Autowired
     private UserRepository _userRepo;
     @Autowired
-    private RoleRepository _roleRepo;
-    @Autowired
     private ComicsRepository _comicsRepo;
     @Autowired
-    private PasswordEncoder passwordEncoder;
-
-
-    @Override
-    public User saveUser(User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        return _userRepo.save(user);
-    }
+    private PageRepository _pageRepository;
+    @Autowired
+    private NoteRepository _noteRepository;
+    @Autowired
+    private IPageMapper pageMapper;
 
     @Override
     public User getUser(String username) {
@@ -53,8 +53,7 @@ public class UserService implements  IUserService{
 
     @Override
     public List<ComicsResponse> getComics() {
-        String name = "test"; //Будет получаться из контекста
-        User user = _userRepo.findByUsername(name);
+        User user = getUserFromAuthentication();
         return user.getUserLibrary().stream().map(
                 comics -> new ComicsResponse(
                 comics.getId(),
@@ -69,7 +68,7 @@ public class UserService implements  IUserService{
 
     @Override
     public void removeComics(Long id) {
-        User user = _userRepo.findByUsername("test"); //Получу из контекста
+        User user = getUserFromAuthentication();
         Optional<Comics> comics = _comicsRepo.findById(id);
         if(comics.isPresent()){
             Set<User> readers = comics.get().getReaders();
@@ -80,13 +79,44 @@ public class UserService implements  IUserService{
 
     @Override
     public void addComicsToUserLibrary(String username, Long comicsId) throws ChangeSetPersister.NotFoundException {
-        User user = _userRepo.findByUsername(username); //Получу из контекста
+        User user = getUserFromAuthentication();
         Optional<Comics> comics = _comicsRepo.findById(comicsId);
         if(comics.isEmpty()) throw new ChangeSetPersister.NotFoundException();
         Comics addedComics = comics.get();
         Set<User> readers = addedComics.getReaders();
         readers.add(user);
         _comicsRepo.save(addedComics);
+    }
+
+    @Override
+    public Note addNoteToPage(Long pageId, String note) {
+        Page page = _pageRepository.getById(pageId);
+        User user = getUserFromAuthentication();
+        return _noteRepository.save(new Note(null, page, note, user));
+    }
+
+    @Override
+    public void deleteNote(Long noteId) {
+        _noteRepository.delete(_noteRepository.getById(noteId));
+    }
+
+    @Override
+    public Note changeNote(Long noteId, String note) {
+        Note existNote = _noteRepository.getById(noteId);
+        existNote.setNote(note);
+        return _noteRepository.save(existNote);
+    }
+
+    @Override
+    public List<PageResponse> getComicsPages(Long comicsId) {
+        Comics comics = _comicsRepo.getById(comicsId);
+        return pageMapper.toDTOs(comics.getPages(), getUserFromAuthentication());
+    }
+
+
+    private User getUserFromAuthentication(){
+        UserDetailsImpl userDetails = (UserDetailsImpl)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return _userRepo.getById(userDetails.getId());
     }
 
 }

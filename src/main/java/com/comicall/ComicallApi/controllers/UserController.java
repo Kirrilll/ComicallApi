@@ -2,6 +2,10 @@ package com.comicall.ComicallApi.controllers;
 
 import com.comicall.ComicallApi.dtos.MessageDTO;
 import com.comicall.ComicallApi.dtos.comics.ComicsResponse;
+import com.comicall.ComicallApi.dtos.note.NoteRequest;
+import com.comicall.ComicallApi.dtos.note.NoteResponse;
+import com.comicall.ComicallApi.dtos.page.PageResponse;
+import com.comicall.ComicallApi.entities.Note;
 import com.comicall.ComicallApi.entities.User;
 import com.comicall.ComicallApi.services.user.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,12 +25,6 @@ import java.util.List;
 public class UserController {
     @Autowired
     private IUserService _userService;
-
-//    @PostMapping("/user/save")
-//    public ResponseEntity<User> createUser(@RequestBody User user){
-//        URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/user/save").toUriString());
-//        return ResponseEntity.created(uri).body(_userService.saveUser(user));
-//    }
 
     @PostMapping("/addToLibrary")
     public ResponseEntity<MessageDTO> addComics(@RequestParam Long comicsId){
@@ -50,11 +48,19 @@ public class UserController {
         return ResponseEntity.ok().body(new MessageDTO("Successfully deleted"));
     }
 
+    @PostMapping("/createNote")
+    public ResponseEntity<Note> createNote(@RequestBody NoteRequest noteRequest){
+        return ResponseEntity.ok().body(_userService.addNoteToPage(noteRequest.getPageId(), noteRequest.getNote()));
+    }
+
+    @GetMapping("read")
+    public ResponseEntity<List<PageResponse>> readComics(@RequestParam Long comicsId){
+        return ResponseEntity.ok().body(_userService.getComicsPages(comicsId));
+    }
+
     //Добавить в свою библиотеку
     //удалить из библиотеки
     //добавить заметку
     //удалить заметку
     //посмотреть личную библиотеку?
-
-
 }

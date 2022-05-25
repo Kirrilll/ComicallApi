@@ -1,10 +1,7 @@
 package com.comicall.ComicallApi.configs;
-
 import org.springdoc.core.GroupedOpenApi;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 
-@Configuration
 public class SwaggerConfig {
     @Bean
     public GroupedOpenApi publicApi() {
@@ -14,5 +11,15 @@ public class SwaggerConfig {
                 .pathsToMatch("/**")
                 .build();
     }
+
+//    @Bean
+//    public OpenAPI customOpenAPI() {
+//        return new OpenAPI()
+//                .components(new Components()
+//                        .addSecuritySchemes("bearer-key",
+//                                new SecurityScheme().type(SecuritySchemeType.HTTP).scheme("bearer").bearerFormat("JWT")));
+//    }
+
+
 
 }

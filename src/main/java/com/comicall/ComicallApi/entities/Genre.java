@@ -1,9 +1,11 @@
 package com.comicall.ComicallApi.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.Hibernate;
 
 import javax.persistence.*;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -51,5 +53,18 @@ public class Genre {
 
     public void setComics(Set<Comics> comics) {
         this.comics = comics;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        Genre genre = (Genre) o;
+        return id != null && Objects.equals(id, genre.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
     }
 }

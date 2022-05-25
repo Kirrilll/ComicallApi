@@ -24,7 +24,8 @@ public class Comics {
     private int publishYear;
     private String posterPath;
 
-    //public Set<Page> pages;
+    @OneToMany(mappedBy = "comics")
+    private Set<Page> pages;
 
     @JsonIgnore
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
@@ -55,9 +56,10 @@ public class Comics {
         this.id = null;
         this.genres = new HashSet<>();
         this.readers = new HashSet<>();
+        this.pages = new HashSet<>();
     }
 
-    public Comics(Long id, String name, String description, int publishYear, String posterPath, User author, Set<Genre> genres, Set<User> readers) {
+    public Comics(Long id, String name, String description, int publishYear, String posterPath, User author, Set<Genre> genres, Set<User> readers, Set<Page> pages) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -66,6 +68,7 @@ public class Comics {
         this.author = author;
         this.genres = genres;
         this.readers = readers;
+        this.pages = pages;
     }
 
     @Override
@@ -143,6 +146,14 @@ public class Comics {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Set<Page> getPages() {
+        return pages;
+    }
+
+    public void setPages(Set<Page> pages) {
+        this.pages = pages;
     }
 
     public static ComicsBuilder builder(){
