@@ -14,9 +14,4 @@ public interface IUserService {
     List<ComicsResponse> getComics();
     void removeComics(Long id);
     void addComicsToUserLibrary(String username, Long id) throws ChangeSetPersister.NotFoundException;
-
-    Note addNoteToPage(Long pageId, String note);
-    void deleteNote(Long noteId);
-    Note changeNote(Long noteId, String note);
-    List<PageResponse> getComicsPages(Long comicsId);
 }

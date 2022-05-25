@@ -1,7 +1,6 @@
 package com.comicall.ComicallApi.helpers.mappers.note_mapper;
 
-import com.comicall.ComicallApi.dtos.note.NoteRequest;
-import com.comicall.ComicallApi.dtos.note.NoteResponse;
+import com.comicall.ComicallApi.dtos.note.NoteDefaultDto;
 import com.comicall.ComicallApi.entities.Note;
 import org.springframework.stereotype.Component;
 
@@ -16,12 +15,12 @@ public class NoteMapper implements INoteMapper{
 //    }
 
     @Override
-    public NoteResponse toDTO(Note note) {
-        return new NoteResponse(note.getId(), note.getNote());
+    public NoteDefaultDto toDTO(Note note) {
+        return new NoteDefaultDto(note.getId(), note.getNote());
     }
 
     @Override
-    public List<NoteResponse> toDTOs(Collection<Note> notes) {
+    public List<NoteDefaultDto> toDTOs(Collection<Note> notes) {
         return notes.stream().map(this::toDTO).toList();
     }
 }

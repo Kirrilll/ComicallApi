@@ -1,12 +1,12 @@
 package com.comicall.ComicallApi.dtos.note;
 
-public class NoteResponse {
+public class NoteDefaultDto {
     private Long id;
     private String note;
 
-    public NoteResponse(){}
+    public NoteDefaultDto(){}
 
-    public NoteResponse(Long id, String note) {
+    public NoteDefaultDto(Long id, String note) {
         this.id = id;
         this.note = note;
     }

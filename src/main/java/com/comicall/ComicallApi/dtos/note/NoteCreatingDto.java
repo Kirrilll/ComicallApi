@@ -1,12 +1,12 @@
 package com.comicall.ComicallApi.dtos.note;
 
-public class NoteRequest {
+public class NoteCreatingDto {
     private String note;
     private Long pageId;
 
-    public NoteRequest(){}
+    public NoteCreatingDto(){}
 
-    public NoteRequest(String note, Long pageId) {
+    public NoteCreatingDto(String note, Long pageId) {
         this.note = note;
         this.pageId = pageId;
     }

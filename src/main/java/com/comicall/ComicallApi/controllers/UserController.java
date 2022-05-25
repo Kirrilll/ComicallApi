@@ -2,19 +2,12 @@ package com.comicall.ComicallApi.controllers;
 
 import com.comicall.ComicallApi.dtos.MessageDTO;
 import com.comicall.ComicallApi.dtos.comics.ComicsResponse;
-import com.comicall.ComicallApi.dtos.note.NoteRequest;
-import com.comicall.ComicallApi.dtos.note.NoteResponse;
-import com.comicall.ComicallApi.dtos.page.PageResponse;
-import com.comicall.ComicallApi.entities.Note;
-import com.comicall.ComicallApi.entities.User;
 import com.comicall.ComicallApi.services.user.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.net.URI;
 import java.util.List;
 
 //Создать DTO userRequest, userResponse
@@ -48,15 +41,6 @@ public class UserController {
         return ResponseEntity.ok().body(new MessageDTO("Successfully deleted"));
     }
 
-    @PostMapping("/createNote")
-    public ResponseEntity<Note> createNote(@RequestBody NoteRequest noteRequest){
-        return ResponseEntity.ok().body(_userService.addNoteToPage(noteRequest.getPageId(), noteRequest.getNote()));
-    }
-
-    @GetMapping("read")
-    public ResponseEntity<List<PageResponse>> readComics(@RequestParam Long comicsId){
-        return ResponseEntity.ok().body(_userService.getComicsPages(comicsId));
-    }
 
     //Добавить в свою библиотеку
     //удалить из библиотеки

@@ -38,12 +38,6 @@ public class UserService implements  IUserService{
     private UserRepository _userRepo;
     @Autowired
     private ComicsRepository _comicsRepo;
-    @Autowired
-    private PageRepository _pageRepository;
-    @Autowired
-    private NoteRepository _noteRepository;
-    @Autowired
-    private IPageMapper pageMapper;
 
     @Override
     public User getUser(String username) {
@@ -87,32 +81,6 @@ public class UserService implements  IUserService{
         readers.add(user);
         _comicsRepo.save(addedComics);
     }
-
-    @Override
-    public Note addNoteToPage(Long pageId, String note) {
-        Page page = _pageRepository.getById(pageId);
-        User user = getUserFromAuthentication();
-        return _noteRepository.save(new Note(null, page, note, user));
-    }
-
-    @Override
-    public void deleteNote(Long noteId) {
-        _noteRepository.delete(_noteRepository.getById(noteId));
-    }
-
-    @Override
-    public Note changeNote(Long noteId, String note) {
-        Note existNote = _noteRepository.getById(noteId);
-        existNote.setNote(note);
-        return _noteRepository.save(existNote);
-    }
-
-    @Override
-    public List<PageResponse> getComicsPages(Long comicsId) {
-        Comics comics = _comicsRepo.getById(comicsId);
-        return pageMapper.toDTOs(comics.getPages(), getUserFromAuthentication());
-    }
-
 
     private User getUserFromAuthentication(){
         UserDetailsImpl userDetails = (UserDetailsImpl)SecurityContextHolder.getContext().getAuthentication().getPrincipal();

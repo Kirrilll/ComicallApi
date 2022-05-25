@@ -1,17 +1,17 @@
 package com.comicall.ComicallApi.dtos.page;
 
-import com.comicall.ComicallApi.dtos.note.NoteResponse;
+import com.comicall.ComicallApi.dtos.note.NoteDefaultDto;
 
 import java.util.List;
 
 public class PageResponse {
     private Long id;
     private String imagePath;
-    private List<NoteResponse> notes;
+    private List<NoteDefaultDto> notes;
 
     public PageResponse(){}
 
-    public PageResponse(Long id, String imagePath, List<NoteResponse> notes) {
+    public PageResponse(Long id, String imagePath, List<NoteDefaultDto> notes) {
         this.id = id;
         this.imagePath = imagePath;
         this.notes = notes;
@@ -33,11 +33,11 @@ public class PageResponse {
         this.imagePath = imagePath;
     }
 
-    public List<NoteResponse> getNotes() {
+    public List<NoteDefaultDto> getNotes() {
         return notes;
     }
 
-    public void setNotes(List<NoteResponse> notes) {
+    public void setNotes(List<NoteDefaultDto> notes) {
         this.notes = notes;
     }
 }
