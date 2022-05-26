@@ -26,30 +26,12 @@ public class LibraryController {
     @Autowired
     private IComicsMapper comicsMapper;
 
-    @Autowired
-    private IGenreMapper _genreMapper;
-
-    @GetMapping("/comics")
-    ResponseEntity<List<ComicsResponse>> getAll(){
-        return ResponseEntity.ok().body(comicsMapper.toDtos(_libraryService.getAll()));
-    }
-
-    //не работает
-    @GetMapping("/comicsByName")
-    ResponseEntity<List<ComicsResponse>> geAllNameContaining(@RequestParam String prefix){
-        return ResponseEntity.ok().body(comicsMapper.toDtos(_libraryService.getAllByComicsTitlePrefix(prefix)));
-    }
-
-    @GetMapping("/comicsByAuthor")
-    ResponseEntity<List<ComicsResponse>> getAllByAuthorName(@RequestParam String username){
-        return ResponseEntity.ok().body(comicsMapper.toDtos(_libraryService.getAllByAuthorPrefix(username)));
-    }
-
     @PostMapping("/comics")
     ResponseEntity<List<ComicsResponse>> getAllByGenres(@RequestBody ComicsFilterRequest filterRequest){
+
         return ResponseEntity
                 .ok()
-                .body(comicsMapper.toDtos(_libraryService.getAllWithGenres(_genreMapper.toEntities(filterRequest.getGenres()))));
+                .body(comicsMapper.toDtos(_libraryService.getFilteredComics(filterRequest)));
     }
 
 }

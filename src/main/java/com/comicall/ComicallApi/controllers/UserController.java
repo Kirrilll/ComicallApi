@@ -41,10 +41,4 @@ public class UserController {
         return ResponseEntity.ok().body(new MessageDTO("Successfully deleted"));
     }
 
-
-    //Добавить в свою библиотеку
-    //удалить из библиотеки
-    //добавить заметку
-    //удалить заметку
-    //посмотреть личную библиотеку?
 }

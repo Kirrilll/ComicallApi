@@ -10,6 +10,7 @@ public class ComicsFilterRequest {
     public ComicsFilterRequest(){}
 
     public ComicsFilterRequest(Set<String> genres, String prefix, boolean isSearchByName) {
+        System.out.println(isSearchByName);
         this.genres = genres;
         this.prefix = prefix;
         this.isSearchByName = isSearchByName;
@@ -35,7 +36,7 @@ public class ComicsFilterRequest {
         return isSearchByName;
     }
 
-    public void setSearchByName(boolean searchByName) {
+    public void setIsSearchByName(boolean searchByName) {
         isSearchByName = searchByName;
     }
 }

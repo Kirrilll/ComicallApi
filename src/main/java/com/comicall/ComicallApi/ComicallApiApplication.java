@@ -1,8 +1,11 @@
 package com.comicall.ComicallApi;
 
+import com.comicall.ComicallApi.dtos.genres.GenreDTO;
 import com.comicall.ComicallApi.entities.Genre;
+import com.comicall.ComicallApi.entities.Role;
 import com.comicall.ComicallApi.entities.User;
 import com.comicall.ComicallApi.repositories.UserRepository;
+import com.comicall.ComicallApi.services.admin.AdminService;
 import com.comicall.ComicallApi.services.admin.IAdminService;
 import com.comicall.ComicallApi.services.author.IAuthorService;
 import com.comicall.ComicallApi.services.user.IUserService;
@@ -28,14 +31,13 @@ public class ComicallApiApplication {
 		SpringApplication.run(ComicallApiApplication.class, args);
 	}
 
-	//kirill, pas - author
-
-	//john, john - author
-
 //	@Bean
-//	CommandLineRunner run(IAdminService adminService, UserRepository userRepository){
+//	CommandLineRunner run(AdminService adminService){
 //		return args -> {
-//			adminService.addRoleToUser("mod", "ADMIN");
+//			adminService.saveGenre(new GenreDTO("ДЕТЕКТИВ"));
+//			adminService.saveGenre(new GenreDTO("ДРАМА"));
+//			adminService.saveGenre(new GenreDTO("ФЭНТЕЗИ"));
+//			adminService.saveGenre(new GenreDTO("КОМЕДИЯ"));
 //		};
 //	}
 }

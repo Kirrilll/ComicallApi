@@ -74,6 +74,8 @@ public class AuthorService implements IAuthorService{
         Optional<Comics> comicsOptional = _comicsRepository.findByName(comicsName);
         if(comicsOptional.isEmpty()) return Optional.empty();
         Comics comics = comicsOptional.get();
+        User author = getUserFromAuthentication();
+        if(!comics.getAuthor().equals(author)) return  Optional.empty();
         Set<Genre> comicsGenres = comics.getGenres();
         comicsGenres.addAll(_genreMapper.toEntities(genres));
         comics.setGenres(comicsGenres);
@@ -86,6 +88,7 @@ public class AuthorService implements IAuthorService{
     public void removeComics(String comicsName) {
         //также здесь очистка пространства от картинок
         Optional<Comics> comics = _comicsRepository.findByName(comicsName);
+        if(!comics.get().getAuthor().equals(getUserFromAuthentication())) return;
         comics.ifPresent(value -> _comicsRepository.delete(value));
     }
 

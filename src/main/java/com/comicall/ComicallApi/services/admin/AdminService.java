@@ -23,8 +23,6 @@ public class AdminService implements IAdminService{
     private RoleRepository _roleRepository;
     @Autowired
     private GenreRepository _genreRepository;
-    @Autowired
-    private GenreMapper _genreMapper;
 
     @Override
     public Role saveRole(Role role) {
