@@ -42,15 +42,20 @@ public class Comics {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<Genre> genres;
 
-    @ManyToMany()
-    @JoinTable(
-            name = "user_library",
-            joinColumns = @JoinColumn(name = "comics_id"),
-            inverseJoinColumns = @JoinColumn(name = "reader_id")
-    )
-    @OnDelete(action = OnDeleteAction.CASCADE)
+//    @ManyToMany()
+//    @JoinTable(
+//            name = "user_library",
+//            joinColumns = @JoinColumn(name = "comics_id"),
+//            inverseJoinColumns = @JoinColumn(name = "reader_id")
+//    )
+//    @OnDelete(action = OnDeleteAction.CASCADE)
+//    @JsonIgnore
+//    private Set<User> readers;
+
+    @OneToMany(mappedBy = "comics")
     @JsonIgnore
-    private Set<User> readers;
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private Set<UsersComics> readers;
 
     public  Comics(){
         this.id = null;
@@ -59,7 +64,7 @@ public class Comics {
         this.pages = new HashSet<>();
     }
 
-    public Comics(Long id, String name, String description, int publishYear, String posterPath, User author, Set<Genre> genres, Set<User> readers, Set<Page> pages) {
+    public Comics(Long id, String name, String description, int publishYear, String posterPath, User author, Set<Genre> genres, Set<UsersComics> readers, Set<Page> pages) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -132,14 +137,6 @@ public class Comics {
         this.genres = genres;
     }
 
-    public Set<User> getReaders() {
-        return readers;
-    }
-
-    public void setReaders(Set<User> readers) {
-        this.readers = readers;
-    }
-
     public String getName() {
         return name;
     }
@@ -154,6 +151,14 @@ public class Comics {
 
     public void setPages(Set<Page> pages) {
         this.pages = pages;
+    }
+
+    public Set<UsersComics> getReaders() {
+        return readers;
+    }
+
+    public void setReaders(Set<UsersComics> readers) {
+        this.readers = readers;
     }
 
     public static ComicsBuilder builder(){

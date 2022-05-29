@@ -13,5 +13,5 @@ public interface IUserService {
     User getUser(String username);
     List<ComicsResponse> getComics();
     void removeComics(Long id);
-    void addComicsToUserLibrary(String username, Long id) throws ChangeSetPersister.NotFoundException;
+    void addComicsToUserLibrary(Long id);
 }

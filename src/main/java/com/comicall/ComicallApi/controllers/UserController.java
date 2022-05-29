@@ -22,12 +22,8 @@ public class UserController {
     @PostMapping("/addToLibrary")
     public ResponseEntity<MessageDTO> addComics(@RequestParam Long comicsId){
         String username = "test";
-        try {
-            _userService.addComicsToUserLibrary("test", comicsId);
-            return ResponseEntity.ok().body(new MessageDTO("successfully added"));
-        } catch (ChangeSetPersister.NotFoundException e) {
-            return ResponseEntity.status(404).body(new MessageDTO("successfully added"));
-        }
+        _userService.addComicsToUserLibrary(comicsId);
+        return ResponseEntity.ok().body(new MessageDTO("successfully added"));
     }
 
     @GetMapping("/comics")

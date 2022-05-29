@@ -1,5 +1,7 @@
 package com.comicall.ComicallApi.dtos.page;
 
+import org.springframework.web.multipart.MultipartFile;
+
 public class PageRequest {
     //Заменить на MulipartFile
     private String filePath;
@@ -27,4 +29,5 @@ public class PageRequest {
     public void setPageNumber(int pageNumber) {
         this.pageNumber = pageNumber;
     }
+
 }

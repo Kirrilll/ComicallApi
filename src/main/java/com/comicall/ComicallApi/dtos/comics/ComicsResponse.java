@@ -12,10 +12,11 @@ public class ComicsResponse {
     private int publishYear;
     private String description;
     private Collection<GenreDTO> genres;
+    private boolean isRead;
 
     public ComicsResponse(){}
 
-    public ComicsResponse(Long id, String name, String authorName, String posterPath, int publishYear, String description, Collection<GenreDTO> genres) {
+    public ComicsResponse(Long id, String name, String authorName, String posterPath, int publishYear, String description, Collection<GenreDTO> genres, boolean isRead) {
         this.id = id;
         this.name = name;
         this.authorName = authorName;
@@ -23,6 +24,7 @@ public class ComicsResponse {
         this.publishYear = publishYear;
         this.description = description;
         this.genres = genres;
+        this.isRead = isRead;
     }
 
     public Long getId() {
@@ -79,5 +81,13 @@ public class ComicsResponse {
 
     public void setGenres(Collection<GenreDTO> genres) {
         this.genres = genres;
+    }
+
+    public boolean getIsRead() {
+        return isRead;
+    }
+
+    public void setIsRead(boolean read) {
+        isRead = read;
     }
 }

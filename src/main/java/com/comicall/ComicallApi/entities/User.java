@@ -30,8 +30,12 @@ public class User {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<Comics> createdComics;
 
-    @ManyToMany(mappedBy = "readers")
-    private Set<Comics> userLibrary;
+//    @ManyToMany(mappedBy = "readers")
+//    private Set<Comics> userLibrary;
+
+    @OneToMany(mappedBy = "user")
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private Set<UsersComics> userLibrary;
 
     @OneToMany(mappedBy = "noteAuthor")
     private Set<Note> notes;
@@ -42,7 +46,7 @@ public class User {
         createdComics = new HashSet<>();
     }
 
-    public User(Long id, String username, String password, Set<Role> roles, Set<Comics> createdComics, Set<Comics> userLibrary) {
+    public User(Long id, String username, String password, Set<Role> roles, Set<Comics> createdComics, Set<UsersComics> userLibrary) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -91,11 +95,11 @@ public class User {
         this.createdComics = createdComics;
     }
 
-    public Set<Comics> getUserLibrary() {
+    public Set<UsersComics> getUserLibrary() {
         return userLibrary;
     }
 
-    public void setUserLibrary(Set<Comics> userLibrary) {
+    public void setUserLibrary(Set<UsersComics> userLibrary) {
         this.userLibrary = userLibrary;
     }
 

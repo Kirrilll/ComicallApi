@@ -31,8 +31,6 @@ public class AuthorService implements IAuthorService{
     @Autowired
     private UserRepository _userRepository;
     @Autowired
-    private GenreRepository _genreRepository;
-    @Autowired
     private IGenreMapper _genreMapper;
     @Autowired
     private PageRepository _pageRepository;

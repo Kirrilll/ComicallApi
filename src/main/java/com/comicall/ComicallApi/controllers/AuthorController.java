@@ -8,6 +8,7 @@ import com.comicall.ComicallApi.services.author.IAuthorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Optional;
 
@@ -19,8 +20,14 @@ public class AuthorController {
     @Autowired
     private IAuthorService _authorService;
 
+    @PostMapping("file")
+    ResponseEntity<MessageDTO> fileUploader(@RequestParam MultipartFile file){
+        return ResponseEntity.ok().body(new MessageDTO(file.getName()));
+    }
+
     @PostMapping("/create")
-    ResponseEntity<?> createComics(@RequestBody ComicsRequest comicsRequest){
+    ResponseEntity<?> createComics(
+            @RequestBody ComicsRequest comicsRequest){
         Optional<Comics> comics = _authorService.createComics(comicsRequest);
         if(comics.isEmpty()) return ResponseEntity.status(404).body(new MessageDTO("author not found"));
         return ResponseEntity.ok(comics.get());

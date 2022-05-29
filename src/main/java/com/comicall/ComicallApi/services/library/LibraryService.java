@@ -6,11 +6,9 @@ import com.comicall.ComicallApi.entities.Genre;
 import com.comicall.ComicallApi.helpers.mappers.genre_mapper.IGenreMapper;
 import com.comicall.ComicallApi.repositories.ComicsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class LibraryService implements ILibraryService{
@@ -24,7 +22,7 @@ public class LibraryService implements ILibraryService{
     public List<Comics> getFilteredComics(ComicsFilterRequest comicsFilterRequest) {
 
         List<Comics> comics = new ArrayList<>();
-        if(comicsFilterRequest.isSearchByName()){
+        if(comicsFilterRequest.getIsSearchByName()){
             comics.addAll(_comicsRepository.findByNameIsContaining(comicsFilterRequest.getPrefix()));
         }
         else{

@@ -32,7 +32,7 @@ public class ComicsFilterRequest {
         this.prefix = prefix;
     }
 
-    public boolean isSearchByName() {
+    public boolean getIsSearchByName() {
         return isSearchByName;
     }
 

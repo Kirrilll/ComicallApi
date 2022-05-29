@@ -25,7 +25,7 @@ public class ComicsMapper implements IComicsMapper{
                 comics.getPosterPath(),
                 comics.getPublishYear(),
                 comics.getDescription(),
-                comics.getGenres().stream().map(genre -> new GenreDTO(genre.getGenre())).toList());
+                comics.getGenres().stream().map(genre -> new GenreDTO(genre.getGenre())).toList(), false);
     }
 
     @Override

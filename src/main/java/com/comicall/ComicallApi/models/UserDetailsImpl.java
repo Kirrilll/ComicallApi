@@ -3,6 +3,7 @@ package com.comicall.ComicallApi.models;
 import com.comicall.ComicallApi.entities.Comics;
 import com.comicall.ComicallApi.entities.Role;
 import com.comicall.ComicallApi.entities.User;
+import com.comicall.ComicallApi.entities.UsersComics;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.security.core.GrantedAuthority;
@@ -26,11 +27,11 @@ public class UserDetailsImpl implements UserDetails {
     private String password;
     private Collection<? extends GrantedAuthority> authorities;
     private Set<Comics> createdComics;
-    private Set<Comics> userLibrary;
+    private Set<UsersComics> userLibrary;
 
 
 
-    public UserDetailsImpl(Long id, String username, String password, Collection<? extends GrantedAuthority> authorities, Set<Comics> createdComics, Set<Comics> userLibrary) {
+    public UserDetailsImpl(Long id, String username, String password, Collection<? extends GrantedAuthority> authorities, Set<Comics> createdComics, Set<UsersComics> userLibrary) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -77,7 +78,7 @@ public class UserDetailsImpl implements UserDetails {
         return createdComics;
     }
 
-    public Set<Comics> getUserLibrary() {
+    public Set<UsersComics> getUserLibrary() {
         return userLibrary;
     }
 
