@@ -1,27 +1,24 @@
-package com.comicall.ComicallApi.services.page;
+package com.comicall.ComicallApi.services.comics;
 
 import com.comicall.ComicallApi.dtos.comics.ComicsReadResponse;
-import com.comicall.ComicallApi.dtos.page.PageResponse;
 import com.comicall.ComicallApi.entities.*;
 import com.comicall.ComicallApi.helpers.mappers.page_mapper.IPageMapper;
 import com.comicall.ComicallApi.models.UserDetailsImpl;
 import com.comicall.ComicallApi.repositories.*;
+import com.comicall.ComicallApi.services.session.ISessionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
-public class PageService implements IPageService{
+public class ComicsService implements IComicsService {
 
     @Autowired
-    private UserRepository _userRepo;
-    @Autowired
-    private ComicsRepository _comicsRepo;
+    private ISessionService _sessionService;
     @Autowired
     private PageRepository _pageRepository;
     @Autowired
@@ -34,7 +31,7 @@ public class PageService implements IPageService{
     @Override
     public Note addNoteToPage(Long pageId, String note) {
         Page page = _pageRepository.getById(pageId);
-        User user = getUserFromAuthentication();
+        User user = _sessionService.getAuthenticatedUser();
         return _noteRepository.save(new Note(null, page, note, user));
     }
 
@@ -52,7 +49,7 @@ public class PageService implements IPageService{
 
     @Override
     public ComicsReadResponse getComicsPages(Long comicsId) throws ChangeSetPersister.NotFoundException {
-        User user = getUserFromAuthentication();
+        User user = _sessionService.getAuthenticatedUser();
 
         Optional<UsersComics> usersComicsBox = _usersComicsRepository.findByUser_IdIsAndComics_IdIs(user.getId(), comicsId);
         if(usersComicsBox.isEmpty()) throw new ChangeSetPersister.NotFoundException();
@@ -65,7 +62,7 @@ public class PageService implements IPageService{
 
     @Override
     public int setBookmark(int pageNumber, Long comicsId) throws Exception {
-        User user = getUserFromAuthentication();
+        User user = _sessionService.getAuthenticatedUser();
         Optional<UsersComics> usersComicsBox = _usersComicsRepository.findByUser_IdIsAndComics_IdIs(user.getId(), comicsId);
         if(usersComicsBox.isEmpty()) throw new ChangeSetPersister.NotFoundException();
         UsersComics usersComics = usersComicsBox.get();
@@ -74,11 +71,5 @@ public class PageService implements IPageService{
         if(usersComics.getComics().getPages().size() == pageNumber) usersComics.setIsRead(true);
         _usersComicsRepository.save(usersComics);
         return pageNumber;
-    }
-
-
-    private User getUserFromAuthentication(){
-        UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return _userRepo.getById(userDetails.getId());
     }
 }

@@ -40,7 +40,6 @@ public class AuthService implements IAuthService{
 
     @Override
     public Optional<User> registerUser(RegisterRequest signupRequest) {
-        initRoles();
         if (_userRepository.existsByUsername(signupRequest.getUsername())) {
             return Optional.empty();
         }
@@ -71,7 +70,6 @@ public class AuthService implements IAuthService{
 
     @Override
     public User registerAuthor(RegisterRequest registerRequest) {
-        initRoles();
         User user;
         if(!_userRepository.existsByUsername(registerRequest.getUsername())) user = registration(registerRequest);
         else user = _userRepository.findByUsername(registerRequest.getUsername());
@@ -95,11 +93,5 @@ public class AuthService implements IAuthService{
         roles.add(reader);
         user.setRoles(roles);
         return user;
-    }
-
-    private void initRoles(){
-        if(!_roleRepository.existsByName("READER")) _roleRepository.save(new Role(null, "READER"));
-        if(!_roleRepository.existsByName("ADMIN")) _roleRepository.save(new Role(null, "ADMIN"));
-        if(!_roleRepository.existsByName("AUTHOR")) _roleRepository.save(new Role(null, "AUTHOR"));
     }
 }

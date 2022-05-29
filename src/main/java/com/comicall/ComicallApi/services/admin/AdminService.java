@@ -4,7 +4,6 @@ import com.comicall.ComicallApi.dtos.genres.GenreDTO;
 import com.comicall.ComicallApi.entities.Genre;
 import com.comicall.ComicallApi.entities.Role;
 import com.comicall.ComicallApi.entities.User;
-import com.comicall.ComicallApi.helpers.mappers.genre_mapper.GenreMapper;
 import com.comicall.ComicallApi.repositories.GenreRepository;
 import com.comicall.ComicallApi.repositories.RoleRepository;
 import com.comicall.ComicallApi.repositories.UserRepository;
@@ -14,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 
 @Service
 public class AdminService implements IAdminService{
@@ -26,6 +26,7 @@ public class AdminService implements IAdminService{
 
     @Override
     public Role saveRole(Role role) {
+        if(_roleRepository.existsByName(role.getName())) return _roleRepository.findByName(role.getName());
         return _roleRepository.save(role);
     }
 
@@ -44,6 +45,7 @@ public class AdminService implements IAdminService{
 
     @Override
     public Genre saveGenre(GenreDTO genreDTO) {
-        return _genreRepository.save(new Genre(null, genreDTO.getName().toUpperCase(Locale.ROOT), new HashSet<>()));
+        Optional<Genre> genreBox = _genreRepository.findByGenre(genreDTO.getName());
+        return genreBox.orElseGet(() -> _genreRepository.save(new Genre(null, genreDTO.getName().toUpperCase(Locale.ROOT), new HashSet<>())));
     }
 }

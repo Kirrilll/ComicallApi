@@ -1,40 +1,36 @@
 package com.comicall.ComicallApi.controllers;
 
 import com.comicall.ComicallApi.dtos.MessageDTO;
-import com.comicall.ComicallApi.dtos.comics.ComicsReadResponse;
 import com.comicall.ComicallApi.dtos.note.NoteCreatingDto;
 import com.comicall.ComicallApi.dtos.note.NoteDefaultDto;
-import com.comicall.ComicallApi.dtos.page.PageResponse;
 import com.comicall.ComicallApi.entities.Note;
-import com.comicall.ComicallApi.services.page.IPageService;
+import com.comicall.ComicallApi.services.comics.IComicsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
 
 @RestController
-@RequestMapping("/api/page")
+@RequestMapping("/api/comics")
 @CrossOrigin(origins = "*")
-public class PageController {
+public class ComicsController {
 
     @Autowired
-    private IPageService _pageService;
+    private IComicsService _pageService;
 
-    @PostMapping("/create")
+    @PostMapping("/note/create")
     public ResponseEntity<Note> createNote(@RequestBody NoteCreatingDto noteCreatingDto){
         return ResponseEntity.ok().body(_pageService.addNoteToPage(noteCreatingDto.getPageId(), noteCreatingDto.getNote()));
     }
 
-    @PatchMapping("/update")
+    @PatchMapping("/note/update")
     public ResponseEntity<Note> updateNote(@RequestBody NoteDefaultDto noteDefaultDto){
         return ResponseEntity.ok().body(_pageService.changeNote(noteDefaultDto.getId(), noteDefaultDto.getNote()));
     }
 
-    @DeleteMapping("/delete")
+    @DeleteMapping("/note/delete")
     public ResponseEntity<MessageDTO> deleteNote(@RequestParam Long noteId){
         _pageService.deleteNote(noteId);
         return ResponseEntity.ok().body(new MessageDTO("note deleted"));

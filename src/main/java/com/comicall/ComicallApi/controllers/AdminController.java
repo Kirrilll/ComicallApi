@@ -23,29 +23,20 @@ import java.util.List;
 @CrossOrigin(origins = "*")
 public class AdminController {
     @Autowired
-    private IUserService _userService;
-    @Autowired
     private IAdminService _adminService;
-    @Autowired
-    private GenreMapper _genreMapper;
 
 
     @PostMapping("/role/create")
-    //@PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Role> createRole(@RequestBody Role role){
         URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/role/save").toUriString());
         return ResponseEntity.created(uri).body(_adminService.saveRole(role));
     }
 
-    //не работает
     @PostMapping("/genre/create")
     public ResponseEntity<?> createGenre(@RequestBody GenreDTO genreDTO){
         return ResponseEntity.ok().body(_adminService.saveGenre(genreDTO));
     }
 
-
-    //Не работает
-    //@PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/user/update")
     public  ResponseEntity<?> updateUser(@RequestBody UserToRoleRequest userToRoleRequest){
         _adminService.addRoleToUser(userToRoleRequest.getUsername(), userToRoleRequest.getRoleName());

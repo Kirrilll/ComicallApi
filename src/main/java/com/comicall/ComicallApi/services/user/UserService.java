@@ -5,6 +5,7 @@ import com.comicall.ComicallApi.dtos.genres.GenreDTO;
 import com.comicall.ComicallApi.entities.*;
 import com.comicall.ComicallApi.models.UserDetailsImpl;
 import com.comicall.ComicallApi.repositories.*;
+import com.comicall.ComicallApi.services.session.ISessionService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,8 @@ public class UserService implements  IUserService{
     private ComicsRepository _comicsRepo;
     @Autowired
     private UsersComicsRepository _userLibraryRepo;
+    @Autowired
+    private ISessionService _sessionService;
 
     @Override
     public User getUser(String username) {
@@ -36,7 +39,7 @@ public class UserService implements  IUserService{
 
     @Override
     public List<ComicsResponse> getComics() {
-        User user = getUserFromAuthentication();
+        User user = _sessionService.getAuthenticatedUser();
         return user.getUserLibrary().stream().map(
                 comics -> new ComicsResponse(
                 comics.getComics().getId(),
@@ -51,21 +54,15 @@ public class UserService implements  IUserService{
 
     @Override
     public void removeComics(Long id) {
-        User user = getUserFromAuthentication();
+        User user = _sessionService.getAuthenticatedUser();
         Optional<UsersComics> usersComicsBox = _userLibraryRepo.findByUser_IdIsAndComics_IdIs(user.getId(), id);
         usersComicsBox.ifPresent(usersComics -> _userLibraryRepo.delete(usersComics));
     }
 
     @Override
     public void addComicsToUserLibrary(Long comicsId) {
-        User user = getUserFromAuthentication();
+        User user = _sessionService.getAuthenticatedUser();
         Optional<Comics> comics = _comicsRepo.findById(comicsId);
         comics.ifPresent(value -> _userLibraryRepo.save(new UsersComics(new UserComicsKey(user.getId(), value.getId()), user, value, false, 1)));
     }
-
-    private User getUserFromAuthentication(){
-        UserDetailsImpl userDetails = (UserDetailsImpl)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return _userRepo.getById(userDetails.getId());
-    }
-
 }

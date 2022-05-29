@@ -30,14 +30,4 @@ public class ComicallApiApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(ComicallApiApplication.class, args);
 	}
-
-//	@Bean
-//	CommandLineRunner run(AdminService adminService){
-//		return args -> {
-//			adminService.saveGenre(new GenreDTO("ДЕТЕКТИВ"));
-//			adminService.saveGenre(new GenreDTO("ДРАМА"));
-//			adminService.saveGenre(new GenreDTO("ФЭНТЕЗИ"));
-//			adminService.saveGenre(new GenreDTO("КОМЕДИЯ"));
-//		};
-//	}
 }

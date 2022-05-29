@@ -12,6 +12,7 @@ import com.comicall.ComicallApi.repositories.ComicsRepository;
 import com.comicall.ComicallApi.repositories.GenreRepository;
 import com.comicall.ComicallApi.repositories.PageRepository;
 import com.comicall.ComicallApi.repositories.UserRepository;
+import com.comicall.ComicallApi.services.session.ISessionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -29,17 +30,17 @@ public class AuthorService implements IAuthorService{
     @Autowired
     private ComicsRepository _comicsRepository;
     @Autowired
-    private UserRepository _userRepository;
-    @Autowired
     private IGenreMapper _genreMapper;
     @Autowired
     private PageRepository _pageRepository;
+    @Autowired
+    private ISessionService _sessionService;
 
     @Override
     public Optional<Comics> createComics(ComicsRequest comics) {
 
         //Заменить это на доставание из контекста
-        User author = getUserFromAuthentication();
+        User author = _sessionService.getAuthenticatedUser();
 
         Comics createdComics = Comics.builder()
                 .setName(comics.getName())
@@ -72,7 +73,7 @@ public class AuthorService implements IAuthorService{
         Optional<Comics> comicsOptional = _comicsRepository.findByName(comicsName);
         if(comicsOptional.isEmpty()) return Optional.empty();
         Comics comics = comicsOptional.get();
-        User author = getUserFromAuthentication();
+        User author = _sessionService.getAuthenticatedUser();
         if(!comics.getAuthor().equals(author)) return  Optional.empty();
         Set<Genre> comicsGenres = comics.getGenres();
         comicsGenres.addAll(_genreMapper.toEntities(genres));
@@ -86,7 +87,7 @@ public class AuthorService implements IAuthorService{
     public void removeComics(String comicsName) {
         //также здесь очистка пространства от картинок
         Optional<Comics> comics = _comicsRepository.findByName(comicsName);
-        if(!comics.get().getAuthor().equals(getUserFromAuthentication())) return;
+        if(!comics.get().getAuthor().equals(_sessionService.getAuthenticatedUser())) return;
         comics.ifPresent(value -> _comicsRepository.delete(value));
     }
 
@@ -102,8 +103,4 @@ public class AuthorService implements IAuthorService{
         return Optional.of(_comicsRepository.save(comics));
     }
 
-    private User getUserFromAuthentication(){
-        UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return _userRepository.getById(userDetails.getId());
-    }
 }
