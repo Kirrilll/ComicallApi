@@ -25,4 +25,7 @@ public interface ComicsRepository extends JpaRepository<Comics, Long> {
     @Query("select c from Comics c where c.author.username like %:prefix%")
     Collection<Comics> findAllByAuthorUsernameContaining(@Param("prefix")String prefix);
 
+    List<Comics> findByAuthor_IdEquals(Long id);
+
+
 }

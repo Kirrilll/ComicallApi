@@ -61,6 +61,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .antMatchers("/api/admin/**").hasAnyAuthority("ADMIN")
                     .antMatchers("/api/author/**").hasAnyAuthority("AUTHOR", "ADMIN")
                     .antMatchers("/api/auth/**").permitAll()
+                    .antMatchers("/storage/**").permitAll()
                     .anyRequest().authenticated();
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
     }

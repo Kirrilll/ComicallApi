@@ -5,6 +5,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -22,10 +23,14 @@ public class Page {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Comics comics;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "notedPage")
     private Set<Note> notes;
 
-    public Page() {}
+    public Page() {
+        notes = new HashSet<>();
+        id = null;
+    }
 
     public Page(Long id, int pageNumber, String path, Comics comics, Set<Note> notes) {
         this.id = id;

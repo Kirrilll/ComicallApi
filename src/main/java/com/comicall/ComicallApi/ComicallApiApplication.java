@@ -26,7 +26,6 @@ import java.util.HashSet;
 @SecurityScheme(name = "Comicall-api", scheme = "basic", type = SecuritySchemeType.HTTP, in = SecuritySchemeIn.HEADER)
 @OpenAPIDefinition(info = @Info(title = "User API", version = "3.0", description = "User Details"))
 public class ComicallApiApplication {
-
 	public static void main(String[] args) {
 		SpringApplication.run(ComicallApiApplication.class, args);
 	}

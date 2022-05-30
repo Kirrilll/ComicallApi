@@ -10,7 +10,6 @@ import org.springframework.data.crossstore.ChangeSetPersister;
 import java.util.List;
 
 public interface IUserService {
-    User getUser(String username);
     List<ComicsResponse> getComics();
     void removeComics(Long id);
     void addComicsToUserLibrary(Long id);

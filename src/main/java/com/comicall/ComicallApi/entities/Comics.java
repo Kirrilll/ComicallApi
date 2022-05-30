@@ -42,29 +42,22 @@ public class Comics {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<Genre> genres;
 
-//    @ManyToMany()
-//    @JoinTable(
-//            name = "user_library",
-//            joinColumns = @JoinColumn(name = "comics_id"),
-//            inverseJoinColumns = @JoinColumn(name = "reader_id")
-//    )
-//    @OnDelete(action = OnDeleteAction.CASCADE)
-//    @JsonIgnore
-//    private Set<User> readers;
-
     @OneToMany(mappedBy = "comics")
     @JsonIgnore
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<UsersComics> readers;
 
+    private boolean isReady;
+
     public  Comics(){
         this.id = null;
+        isReady = false;
         this.genres = new HashSet<>();
         this.readers = new HashSet<>();
         this.pages = new HashSet<>();
     }
 
-    public Comics(Long id, String name, String description, int publishYear, String posterPath, User author, Set<Genre> genres, Set<UsersComics> readers, Set<Page> pages) {
+    public Comics(Long id, String name, String description, int publishYear, String posterPath, User author, Set<Genre> genres, Set<UsersComics> readers, Set<Page> pages, boolean isReady) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -74,6 +67,7 @@ public class Comics {
         this.genres = genres;
         this.readers = readers;
         this.pages = pages;
+        this.isReady = isReady;
     }
 
     @Override
@@ -165,4 +159,11 @@ public class Comics {
         return new ComicsBuilder();
     }
 
+    public boolean getIsReady() {
+        return isReady;
+    }
+
+    public void setIsReady(boolean ready) {
+        isReady = ready;
+    }
 }

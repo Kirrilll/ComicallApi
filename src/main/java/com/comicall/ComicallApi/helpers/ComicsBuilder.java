@@ -11,7 +11,7 @@ public class ComicsBuilder implements IBuilder<Comics>{
     String name;
     String description;
     int publishYear;
-    String  posterPath;
+    String  posterPath = null;
     User author;
     Set<Genre> genres = new HashSet<>();
     Set<UsersComics> readers = new HashSet<>();
@@ -59,6 +59,6 @@ public class ComicsBuilder implements IBuilder<Comics>{
 
     @Override
     public Comics build() {
-        return new Comics(id, name, description, publishYear, posterPath, author, genres, readers, pages);
+        return new Comics(id, name, description, publishYear, posterPath, author, genres, readers, pages, false);
     }
 }

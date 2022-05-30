@@ -32,12 +32,6 @@ public class UserService implements  IUserService{
     private ISessionService _sessionService;
 
     @Override
-    public User getUser(String username) {
-        return _userRepo.findByUsername(username);
-    }
-
-
-    @Override
     public List<ComicsResponse> getComics() {
         User user = _sessionService.getAuthenticatedUser();
         return user.getUserLibrary().stream().map(

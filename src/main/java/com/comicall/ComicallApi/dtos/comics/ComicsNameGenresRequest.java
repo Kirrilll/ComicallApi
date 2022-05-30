@@ -3,20 +3,20 @@ package com.comicall.ComicallApi.dtos.comics;
 import java.util.Set;
 
 public class ComicsNameGenresRequest {
-    private String comicsName;
+    private Long comicsId;
     private Set<String> genres;
 
-    public ComicsNameGenresRequest(String comicsName, Set<String> genres) {
-        this.comicsName = comicsName;
+    public ComicsNameGenresRequest(Long comicsId, Set<String> genres) {
+        this.comicsId = comicsId;
         this.genres = genres;
     }
 
-    public String getComicsName() {
-        return comicsName;
+    public Long getComicsId() {
+        return comicsId;
     }
 
-    public void setComicsName(String comicsName) {
-        this.comicsName = comicsName;
+    public void setComicsId(Long comicsId) {
+        this.comicsId = comicsId;
     }
 
     public Set<String> getGenres() {
