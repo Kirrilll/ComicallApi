@@ -2,6 +2,7 @@ package com.comicall.ComicallApi.controllers;
 
 import com.comicall.ComicallApi.dtos.MessageDTO;
 import com.comicall.ComicallApi.dtos.comics.ComicsResponse;
+import com.comicall.ComicallApi.dtos.comics.ComicsUserResponse;
 import com.comicall.ComicallApi.services.user.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister;
@@ -20,21 +21,18 @@ public class UserController {
     private IUserService _userService;
 
     @PostMapping("/addToLibrary")
-    public ResponseEntity<MessageDTO> addComics(@RequestParam Long comicsId){
-        String username = "test";
-        _userService.addComicsToUserLibrary(comicsId);
-        return ResponseEntity.ok().body(new MessageDTO("successfully added"));
+    public ResponseEntity<ComicsUserResponse> addComics(@RequestParam Long comicsId){
+        return ResponseEntity.ok().body( _userService.addComicsToUserLibrary(comicsId));
     }
 
     @GetMapping("/comics")
-    public ResponseEntity<List<ComicsResponse>> getUserLibrary(){
+    public ResponseEntity<List<ComicsUserResponse>> getUserLibrary(){
         return ResponseEntity.ok(_userService.getComics());
     }
 
     @PatchMapping("/removeComics")
-    public ResponseEntity<MessageDTO> removeComicsFromLibrary(@RequestParam Long id){
-        _userService.removeComics(id);
-        return ResponseEntity.ok().body(new MessageDTO("Successfully deleted"));
+    public ResponseEntity<ComicsUserResponse> removeComicsFromLibrary(@RequestParam Long id){
+        return ResponseEntity.ok().body(_userService.removeComics(id));
     }
 
 }

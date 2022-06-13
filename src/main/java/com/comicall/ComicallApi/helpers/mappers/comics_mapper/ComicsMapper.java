@@ -13,9 +13,6 @@ import java.util.List;
 @Component
 public class ComicsMapper implements IComicsMapper{
 
-    @Autowired
-    IGenreMapper genreMapper;
-
     @Override
     public ComicsResponse toDto(Comics comics) {
         return new ComicsResponse(
@@ -25,7 +22,8 @@ public class ComicsMapper implements IComicsMapper{
                 comics.getPosterPath(),
                 comics.getPublishYear(),
                 comics.getDescription(),
-                comics.getGenres().stream().map(genre -> new GenreDTO(genre.getGenre())).toList(), false);
+                comics.getGenres().stream().map(genre -> new GenreDTO(genre.getGenre())).toList(),
+                comics.getIsReady());
     }
 
     @Override

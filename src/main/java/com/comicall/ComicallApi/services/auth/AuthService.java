@@ -69,13 +69,17 @@ public class AuthService implements IAuthService{
     }
 
     @Override
-    public User registerAuthor(RegisterRequest registerRequest) {
-        User user;
-        if(!_userRepository.existsByUsername(registerRequest.getUsername())) user = registration(registerRequest);
-        else user = _userRepository.findByUsername(registerRequest.getUsername());
-        Set<Role> roles =  user.getRoles();
+    public Optional<User> registerAuthor(RegisterRequest registerRequest) {
+        Optional<User> user = Optional.ofNullable( _userRepository.findByUsername(registerRequest.getUsername()));
+
+        if(user.isEmpty()) user = Optional.of(registration(registerRequest));
+        else if(user.get().getRoles().contains(_roleRepository.findByName("AUTHOR"))) return Optional.empty();
+
+
+
+        Set<Role> roles =  user.get().getRoles();
         roles.add(_roleRepository.findByName("AUTHOR"));
-        return _userRepository.save(user);
+        return Optional.of( _userRepository.save(user.get()));
     }
 
     private User registration(RegisterRequest registerRequest){

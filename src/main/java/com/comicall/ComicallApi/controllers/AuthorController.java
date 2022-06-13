@@ -2,6 +2,7 @@ package com.comicall.ComicallApi.controllers;
 
 import com.comicall.ComicallApi.dtos.MessageDTO;
 import com.comicall.ComicallApi.dtos.comics.ComicsNameGenresRequest;
+import com.comicall.ComicallApi.dtos.comics.ComicsPublish;
 import com.comicall.ComicallApi.dtos.comics.ComicsRequest;
 import com.comicall.ComicallApi.dtos.comics.ComicsResponse;
 import com.comicall.ComicallApi.dtos.page.PageRequest;
@@ -28,21 +29,21 @@ public class AuthorController {
 
     @PostMapping(value = "/create", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     ResponseEntity<?> createComics(@ModelAttribute ComicsRequest comicsRequest){
-        Optional<Comics> comics = _authorService.createComics(comicsRequest);
+        Optional<ComicsResponse> comics = _authorService.createComics(comicsRequest);
         if(comics.isEmpty()) return ResponseEntity.status(404).body(new MessageDTO("author not found"));
         return ResponseEntity.ok(comics.get());
     }
 
     @PatchMapping(value = "/comics/add", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     ResponseEntity<?> addPagesToComics(@ModelAttribute PageRequest pageRequest){
-        Optional<Comics> comicsBox = _authorService.addPagesToComics(pageRequest);
+        Optional<ComicsResponse> comicsBox = _authorService.addPagesToComics(pageRequest);
         if(comicsBox.isEmpty()) return ResponseEntity.badRequest().body(new MessageDTO("bad request"));
         return ResponseEntity.ok().body(comicsBox.get());
     }
 
     @PutMapping(value = "/change/{id}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     ResponseEntity<?> changeComics(@ModelAttribute ComicsRequest comicsRequest, @PathVariable Long id){
-        Optional<Comics> comics = _authorService.changeComics(comicsRequest, id);
+        Optional<ComicsResponse> comics = _authorService.changeComics(comicsRequest, id);
         if(comics.isEmpty()) return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessageDTO("comics not found"));
         return ResponseEntity.ok(comics.get());
     }
@@ -55,11 +56,15 @@ public class AuthorController {
 
     @PatchMapping("/addGenres")
     ResponseEntity<?> addGenresToComics(@RequestBody ComicsNameGenresRequest comicsNameGenresRequest){
-        Optional<Comics> comics = _authorService.addGenresToComics(comicsNameGenresRequest.getComicsId(), comicsNameGenresRequest.getGenres());
+        Optional<ComicsResponse> comics = _authorService.addGenresToComics(comicsNameGenresRequest.getComicsId(), comicsNameGenresRequest.getGenres());
         if(comics.isEmpty()) return ResponseEntity.status(404).body(new MessageDTO("comics not found"));
         return ResponseEntity.ok(comics.get());
     }
 
+    @PutMapping("/publish")
+    ResponseEntity<?> publishComics(@RequestBody ComicsPublish comicsPublish){
+        return ResponseEntity.ok(_authorService.publishComics(comicsPublish.getComicsId(), comicsPublish.getIsRead()));
+    }
 
 
     @GetMapping("/comics")

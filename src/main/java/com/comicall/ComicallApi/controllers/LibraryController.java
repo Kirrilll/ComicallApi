@@ -27,11 +27,19 @@ public class LibraryController {
     private IComicsMapper comicsMapper;
 
     @PostMapping("/comics")
-    ResponseEntity<List<ComicsResponse>> getAllByGenres(@RequestBody ComicsFilterRequest filterRequest){
+    ResponseEntity<List<ComicsResponse>> getAllByFilter(@RequestBody ComicsFilterRequest filterRequest){
 
         return ResponseEntity
                 .ok()
                 .body(comicsMapper.toDtos(_libraryService.getFilteredComics(filterRequest)));
     }
+
+    @GetMapping("/genres")
+
+    ResponseEntity<List<GenreDTO>> getAllGenres(){
+        return ResponseEntity.ok(_libraryService.getAllGenres());
+    }
+
+
 
 }

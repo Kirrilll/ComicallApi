@@ -9,5 +9,5 @@ import java.util.Optional;
 public interface IAuthService {
     Optional<User> registerUser(RegisterRequest registerRequest);
     JwtResponse signIn(RegisterRequest loginRequest);
-    User registerAuthor(RegisterRequest registerRequest);
+    Optional<User> registerAuthor(RegisterRequest registerRequest);
 }

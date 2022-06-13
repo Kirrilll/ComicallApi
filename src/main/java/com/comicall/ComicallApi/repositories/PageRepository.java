@@ -10,4 +10,6 @@ import java.util.List;
 
 public interface PageRepository extends JpaRepository<Page, Long> {
     List<Page> findByComics_IdIs(Long id, Sort sort);
+
+
 }

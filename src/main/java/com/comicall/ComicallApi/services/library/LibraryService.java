@@ -1,10 +1,12 @@
 package com.comicall.ComicallApi.services.library;
 
 import com.comicall.ComicallApi.dtos.comics.ComicsFilterRequest;
+import com.comicall.ComicallApi.dtos.genres.GenreDTO;
 import com.comicall.ComicallApi.entities.Comics;
 import com.comicall.ComicallApi.entities.Genre;
 import com.comicall.ComicallApi.helpers.mappers.genre_mapper.IGenreMapper;
 import com.comicall.ComicallApi.repositories.ComicsRepository;
+import com.comicall.ComicallApi.repositories.GenreRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +16,8 @@ import java.util.*;
 public class LibraryService implements ILibraryService{
     @Autowired
     private ComicsRepository _comicsRepository;
+    @Autowired
+    private GenreRepository _genreRepository;
 
     @Autowired
     private IGenreMapper _genreMapper;
@@ -36,6 +40,15 @@ public class LibraryService implements ILibraryService{
             intersection.retainAll(genres);
             return intersection.size() == genres.size();
         }).toList();
+    }
+
+    @Override
+    public List<GenreDTO> getAllGenres() {
+        return  _genreRepository
+                .findAll()
+                .stream()
+                .map(genre -> _genreMapper.toDTO(genre))
+                .toList();
     }
 
 

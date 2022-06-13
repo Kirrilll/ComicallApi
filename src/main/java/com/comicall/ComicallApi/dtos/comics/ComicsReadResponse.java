@@ -2,9 +2,11 @@ package com.comicall.ComicallApi.dtos.comics;
 
 import com.comicall.ComicallApi.dtos.page.PageRequest;
 import com.comicall.ComicallApi.dtos.page.PageResponse;
+import lombok.Builder;
 
 import java.util.List;
 
+@Builder
 public class ComicsReadResponse {
     private List<PageResponse> pages;
     private int bookmark;

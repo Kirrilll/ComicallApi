@@ -37,8 +37,9 @@ public class AuthController {
     }
 
     @PostMapping("/signupAuthor")
-    public ResponseEntity<MessageDTO> registerAsAuthor(@RequestBody RegisterRequest signupRequest){
-        _authService.registerAuthor(signupRequest);
-        return ResponseEntity.ok(new MessageDTO("User CREATED"));
+    public ResponseEntity<?> registerAsAuthor(@RequestBody RegisterRequest signupRequest){
+        Optional<User> user =  _authService.registerAuthor(signupRequest);
+        if(user.isEmpty()) return ResponseEntity.badRequest().body(new MessageDTO("user this username is already exist"));
+        return ResponseEntity.ok(user.get());
     }
 }

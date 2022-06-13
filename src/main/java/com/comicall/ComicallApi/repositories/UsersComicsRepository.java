@@ -7,9 +7,16 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface UsersComicsRepository extends JpaRepository<UsersComics, UserComicsKey> {
     @Query("select u from UsersComics u where u.user.id = ?1 and u.comics.id = ?2")
     Optional<UsersComics> findByUser_IdIsAndComics_IdIs(Long userId, Long comicsId);
+
+    List<UsersComics> findByUser_IdIs(Long id);
+
+    List<UsersComics> findByUser_IdAndComics_NameContaining(Long id, String name);
+
+
 }

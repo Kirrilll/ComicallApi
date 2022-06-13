@@ -8,4 +8,7 @@ import java.util.List;
 public interface NoteRepository extends JpaRepository<Note, Long> {
     List<Note> findByNoteAuthor_UsernameEqualsAndNotedPage_IdEquals(String username, Long id);
 
+    List<Note> deleteByNotedPage_Comics_IdIsAndNoteAuthor_IdIs(Long comicsId, Long userId);
+
+
 }

@@ -10,6 +10,7 @@ import com.comicall.ComicallApi.entities.Genre;
 import com.comicall.ComicallApi.entities.Page;
 import com.comicall.ComicallApi.entities.User;
 import com.comicall.ComicallApi.helpers.files.FileUtils;
+import com.comicall.ComicallApi.helpers.mappers.comics_mapper.IComicsMapper;
 import com.comicall.ComicallApi.helpers.mappers.genre_mapper.IGenreMapper;
 import com.comicall.ComicallApi.helpers.mappers.page_mapper.IPageMapper;
 import com.comicall.ComicallApi.models.UserDetailsImpl;
@@ -49,9 +50,11 @@ public class AuthorService implements IAuthorService{
     private IImagesService _imageService;
     @Autowired
     private FileUtils _fileUtils;
+    @Autowired
+    private IComicsMapper _comicsMapper;
 
     @Override
-    public Optional<Comics> createComics(ComicsRequest comics) {
+    public Optional<ComicsResponse> createComics(ComicsRequest comics) {
         User author = _sessionService.getAuthenticatedUser();
         Comics createdComics = Comics.builder()
                 .setName(comics.getName())
@@ -65,27 +68,25 @@ public class AuthorService implements IAuthorService{
             if(comics.getLogo().isEmpty()) return Optional.empty();
             String logoPath = _imageService.store(comics.getLogo(), author.getUsername(), savedComics.getName(), "logo");
             savedComics.setPosterPath(logoPath);
-            return Optional.of( _comicsRepository.save(createdComics));
+            return Optional.of( _comicsMapper.toDto(_comicsRepository.save(createdComics)));
         } catch (IOException e) {
             return Optional.empty();
         }
     }
 
     @Override
-    public Optional<Comics> addGenresToComics(Long comicsId, Set<String> genres)  {
+    public Optional<ComicsResponse> addGenresToComics(Long comicsId, Set<String> genres)  {
         Optional<Comics> comicsOptional = _comicsRepository.findById(comicsId);
         if(comicsOptional.isEmpty()) return Optional.empty();
         Comics comics = comicsOptional.get();
         User author = _sessionService.getAuthenticatedUser();
         if(!comics.getAuthor().equals(author)) return  Optional.empty();
-        Set<Genre> comicsGenres = comics.getGenres();
-        comicsGenres.addAll(_genreMapper.toEntities(genres));
-        comics.setGenres(comicsGenres);
-        return Optional.of(_comicsRepository.save(comics));
+        comics.setGenres(_genreMapper.toEntities(genres));
+        return Optional.of(_comicsMapper.toDto(_comicsRepository.save(comics)));
     }
 
     @Override
-    public Optional<Comics> addPagesToComics(PageRequest pageRequest) {
+    public Optional<ComicsResponse> addPagesToComics(PageRequest pageRequest) {
         User author = _sessionService.getAuthenticatedUser();
         Optional<Comics> comicsBox = _comicsRepository.findById(pageRequest.getComicsId());
         if(comicsBox.isEmpty()) return Optional.empty();
@@ -105,7 +106,7 @@ public class AuthorService implements IAuthorService{
                 return Optional.empty();
             }
         }
-        return Optional.of(_comicsRepository.save(comics));
+        return Optional.of(_comicsMapper.toDto(_comicsRepository.save(comics)));
     }
 
 
@@ -124,7 +125,7 @@ public class AuthorService implements IAuthorService{
     }
 
     @Override
-    public Optional<Comics> changeComics(ComicsRequest comicsRequest, Long comicsId) {
+    public Optional<ComicsResponse> changeComics(ComicsRequest comicsRequest, Long comicsId) {
         Optional<Comics> comicsOptional = _comicsRepository.findById(comicsId);
         if(comicsOptional.isEmpty()) return Optional.empty();
         Comics comics = comicsOptional.get();
@@ -132,7 +133,6 @@ public class AuthorService implements IAuthorService{
             comics.setDescription(comicsRequest.getDescription());
         }
         if(comicsRequest.getLogo() != null) {
-            System.out.println("no null");
             try {
                 String logoPath = _imageService.store(comicsRequest.getLogo(), comics.getAuthor().getUsername(), comics.getName(), "logo");
                 comics.setPosterPath(logoPath);
@@ -143,7 +143,7 @@ public class AuthorService implements IAuthorService{
         }
         comics.setPublishYear(comicsRequest.getPublishYear());
         comics.setIsReady(comicsRequest.getIsReady());
-        return Optional.of(_comicsRepository.save(comics));
+        return Optional.of(_comicsMapper.toDto(_comicsRepository.save(comics)));
     }
 
     @Override
@@ -151,15 +151,7 @@ public class AuthorService implements IAuthorService{
         return _comicsRepository
                 .findByAuthor_IdEquals(_sessionService.getAuthenticatedUser().getId())
                 .stream()
-                .map(comics -> new ComicsResponse(
-                        comics.getId(),
-                        comics.getName(),
-                        comics.getAuthor().getUsername(),
-                        comics.getPosterPath(),
-                        comics.getPublishYear(),
-                        comics.getDescription(),
-                        comics.getGenres().stream().map(genre -> new GenreDTO(genre.getGenre())).toList(),
-                        comics.getIsReady()))
+                .map(comics -> _comicsMapper.toDto(comics))
                 .toList();
     }
 
@@ -168,5 +160,12 @@ public class AuthorService implements IAuthorService{
         Comics comics = _comicsRepository.getById(id);
         if(!comics.getAuthor().equals(_sessionService.getAuthenticatedUser()))  return Optional.empty();
         return Optional.of( _pageRepository.findByComics_IdIs(id, Sort.by(Sort.Direction.ASC, "pageNumber")));
+    }
+
+    @Override
+    public ComicsResponse publishComics(Long id, boolean isRead) {
+        Comics comics = _comicsRepository.getById(id);
+        comics.setIsReady(isRead);
+        return _comicsMapper.toDto(comics);
     }
 }

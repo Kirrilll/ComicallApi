@@ -20,6 +20,8 @@ public class Comics {
     private Long id;
 
     private String name;
+
+    @Column(length = 500)
     private String description;
     private int publishYear;
     private String posterPath;

@@ -14,11 +14,12 @@ import java.util.Set;
 public interface IAuthorService {
 
     //Создание объединить воедино
-    Optional<Comics> createComics(ComicsRequest comics);
-    Optional<Comics> addGenresToComics(Long comicsId, Set<String> genres);
-    Optional<Comics> addPagesToComics(PageRequest pageRequest);
+    Optional<ComicsResponse> createComics(ComicsRequest comics);
+    Optional<ComicsResponse> addGenresToComics(Long comicsId, Set<String> genres);
+    Optional<ComicsResponse> addPagesToComics(PageRequest pageRequest);
     void removeComics(Long comicsId);
-    Optional<Comics> changeComics(ComicsRequest comics, Long comicsId);
+    Optional<ComicsResponse> changeComics(ComicsRequest comics, Long comicsId);
     List<ComicsResponse> getAuthorsComics();
     Optional<List<Page>> getComicsPages(Long id);
+    ComicsResponse publishComics(Long id, boolean isRead);
 }
