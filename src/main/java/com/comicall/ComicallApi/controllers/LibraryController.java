@@ -35,7 +35,6 @@ public class LibraryController {
     }
 
     @GetMapping("/genres")
-
     ResponseEntity<List<GenreDTO>> getAllGenres(){
         return ResponseEntity.ok(_libraryService.getAllGenres());
     }

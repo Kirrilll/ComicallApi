@@ -27,10 +27,10 @@ public class LibraryService implements ILibraryService{
 
         List<Comics> comics = new ArrayList<>();
         if(comicsFilterRequest.getIsSearchByName()){
-            comics.addAll(_comicsRepository.findByNameIsContaining(comicsFilterRequest.getPrefix()));
+            comics.addAll(_comicsRepository.findByNameContainingAndIsReadyIsTrue(comicsFilterRequest.getPrefix()));
         }
         else{
-            comics.addAll(_comicsRepository.findAllByAuthorUsernameContaining(comicsFilterRequest.getPrefix()));
+            comics.addAll(_comicsRepository.findByNameContainingAndIsReadyIsTrue(comicsFilterRequest.getPrefix()));
         }
         if(comicsFilterRequest.getGenres() == null) return comics;
         Set<Genre> genres = new HashSet<>(_genreMapper.toEntities(comicsFilterRequest.getGenres()));

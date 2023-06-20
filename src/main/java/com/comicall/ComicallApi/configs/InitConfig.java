@@ -21,11 +21,15 @@ public class InitConfig {
             adminService.saveGenre(new GenreDTO("СУПЕРГЕРОИКА"));
             adminService.saveGenre(new GenreDTO("ТРИЛЛЕР"));
             adminService.saveGenre(new GenreDTO("БОЕВИК"));
-
+            adminService.saveGenre(new GenreDTO("ПОСТАПОКАЛИПТИКА"));
+            adminService.saveGenre(new GenreDTO("ФАНТАСТИКА"));
+            adminService.saveGenre(new GenreDTO("ЭРОТИКА"));
+            adminService.saveGenre(new GenreDTO("КОМЕДИЯ"));
+            adminService.saveGenre(new GenreDTO("МИСТИКА"));
+            adminService.saveGenre(new GenreDTO("НУАР"));
             adminService.saveRole(new Role(null, "READER"));
             adminService.saveRole(new Role(null, "ADMIN"));
             adminService.saveRole(new Role(null, "AUTHOR"));
-
             authService.registerAuthor(new RegisterRequest("admin", "admin"));
             adminService.addRoleToUser("admin", "ADMIN");
 		};

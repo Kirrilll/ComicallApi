@@ -22,6 +22,14 @@ public interface ComicsRepository extends JpaRepository<Comics, Long> {
     @Query("select c from Comics c where c.name like %:prefix%")
     List<Comics> findByNameIsContaining(@Param("prefix") String name);
 
+    @Query("select c from Comics c where c.name like %:prefix% and c.isReady = true")
+    List<Comics> findByNameContainingAndIsReadyIsTrue(@Param("prefix") String name);
+
+    List<Comics> findByAuthor_UsernameIsAndIsReadyIsTrue(String username);
+
+
+
+
     @Query("select c from Comics c where c.author.username like %:prefix%")
     Collection<Comics> findAllByAuthorUsernameContaining(@Param("prefix")String prefix);
 
